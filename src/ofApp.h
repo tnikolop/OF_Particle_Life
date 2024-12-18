@@ -14,6 +14,7 @@ class Particle {
 
 	void update();
 	void draw();
+	void apply_WallRepel();
 };
 
 class ofApp : public ofBaseApp{
@@ -24,16 +25,16 @@ class ofApp : public ofBaseApp{
 		void draw();
 
 		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void mouseEntered(int x, int y);
-		void mouseExited(int x, int y);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
+		// void keyReleased(int key);
+		// void mouseMoved(int x, int y );
+		// void mouseDragged(int x, int y, int button);
+		// void mousePressed(int x, int y, int button);
+		// void mouseReleased(int x, int y, int button);
+		// void mouseEntered(int x, int y);
+		// void mouseExited(int x, int y);
+		// void windowResized(int w, int h);
+		// void dragEvent(ofDragInfo dragInfo);
+		// void gotMessage(ofMessage msg);
 
 		// Constant Variables
 		const short MAP_BORDER = 5;
@@ -43,14 +44,15 @@ class ofApp : public ofBaseApp{
 		const float MAX_FORCE = 25;
 		const short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
 		const float WALL_REPEL_FORCE = 0.1;
-		const int NUM_TYPES = 3;    // Number of different particle types
-		#define RED 0
-		#define GREEN 1
-		#define YELLOW 2
+		static const int NUM_TYPES = 3;    // Number of different particle types
+		// #define RED 0
+		// #define GREEN 1
+		// #define YELLOW 2
 		short FORCE_RANGE = 200;
 		short number_of_particles = 450;    // per type (color)
 		short total_particles = number_of_particles*NUM_TYPES;
 
+		// To have easy access to the color types
 		std::array<ofColor,3> color_types = {
 			ofColor::red,	// 0
 			ofColor::green,	// 1
@@ -58,6 +60,10 @@ class ofApp : public ofBaseApp{
 		};
 
 		vector<Particle> particles;		// vector containing all particles;
+		float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
 		
 		void Create_particles();
+		void initialize_forces(float min, float max);
+		
+
 };

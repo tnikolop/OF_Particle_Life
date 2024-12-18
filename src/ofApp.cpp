@@ -4,9 +4,8 @@
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);
     Create_particles();
-    
-    
-    
+    initialize_forces(-MAX_FORCE,MAX_FORCE);
+
 }
 
 //--------------------------------------------------------------
@@ -27,62 +26,14 @@ void ofApp::keyPressed(int key){
 
 }
 
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
-}
-
 Particle::Particle(float x, float y, ofColor colour) {
     position = glm::vec2(x,y);          // Initialize position with input coordinates
     velocity = glm::vec2(0.0f,0.0f);    // Start with zero velocity
-    color = colour;                      // Assign the particle type
+    color = colour;                     // Assign the particle type
 }
 
+void Particle::update(){}
+void Particle::apply_WallRepel(){}
 void Particle::draw() {
     ofSetColor(color);
     ofDrawCircle(position,1);
@@ -99,4 +50,14 @@ void ofApp::Create_particles(){
             particles.push_back(newParticle);
         }
     }       
+}
+
+void ofApp::initialize_forces(float min, float max){
+    for (int i = 0; i < NUM_TYPES; i++)
+    {
+        for (int j = 0; j < NUM_TYPES; j++)
+        {
+            force_matrix[i][j] = ofRandom(min,max);
+        }
+    }    
 }
