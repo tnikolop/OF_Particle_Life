@@ -15,7 +15,18 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    for (int i = 0; i < total_particles; i++)
+    {
+        for (int j = 0; j < total_particles; j++)
+        {
+            if (i!= j) {
+                particles[i].compute_Force(particles[j]);
+            }
+        }
+    }
+    for (auto& particle : particles) {
+            particle.update();
+        }
 }
 
 //--------------------------------------------------------------
@@ -37,7 +48,20 @@ Particle::Particle(float x, float y, int color) {
     type = color;                     // Assign the particle type
 }
 
-void Particle::update(){}
+void Particle::update(){
+    position += velocity;  // Add velocity to position to move the particle
+    
+    // the particles must always be on screen
+    if (position.x > MAP_WIDTH)
+        position.x = MAP_WIDTH - 1;
+    else if (position.x < MAP_BORDER)
+        position.x = MAP_BORDER;
+    
+    if (position.y > MAP_HEIGHT)
+        position.y = MAP_HEIGHT - 1;
+    else if (position.y < MAP_BORDER)
+        position.y = MAP_BORDER;
+}
 void Particle::apply_WallRepel(){}
 void Particle::draw() {
     ofColor color;
@@ -66,6 +90,9 @@ void Particle::compute_Force(const Particle& acting_particle){
     // direction /= distance;  // Normalize the direction giati mas noiazei mono to direction tou vector oxi to magnitude tou
     // isws na xreiazetai na dieresw me distance^2 gia normalization alla den nomizw
     
+    const float dt = 0.69;
+    this->velocity = (this->velocity+force_strength * direction) *dt;
+    // to dt na koitaksw
 }
 
 // Creates a specifc number of every particle type and adds them to the vector of particles
