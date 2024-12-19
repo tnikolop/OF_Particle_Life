@@ -10,7 +10,7 @@ const short ATOM_WIDTH = 1;
 const float MAX_FORCE = 25;
 const short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
 const float WALL_REPEL_FORCE = 0.1;
-static const int NUM_TYPES = 3;    // Number of different particle types
+const int NUM_TYPES = 3;    // Number of different particle types
 #define RED 0
 #define GREEN 1
 #define YELLOW 2

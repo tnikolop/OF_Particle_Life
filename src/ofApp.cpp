@@ -23,6 +23,7 @@ void ofApp::update(){
                 particles[i].compute_Force(particles[j]);
             }
         }
+        particles[i].apply_WallRepel();
     }
     for (auto& particle : particles) {
             particle.update();
@@ -39,6 +40,7 @@ for (int i = 0; i < particles.size(); i++)
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    //restart
     particles.clear();
     Create_particles();
 }
@@ -63,7 +65,15 @@ void Particle::update(){
     else if (position.y < MAP_BORDER)
         position.y = MAP_BORDER;
 }
-void Particle::apply_WallRepel(){}
+
+// Force that repells the particles from the edge of the map
+// so they do not stay there
+void Particle::apply_WallRepel(){
+    velocity.x += position.x < WALL_REPEL_BOUND ? (WALL_REPEL_BOUND - position.x) * WALL_REPEL_FORCE : 0.0F;
+    velocity.y += position.y < WALL_REPEL_BOUND ? (WALL_REPEL_BOUND - position.y) * WALL_REPEL_FORCE : 0.0F;
+    velocity.x += position.x > MAP_WIDTH - WALL_REPEL_BOUND ? (MAP_WIDTH - WALL_REPEL_BOUND - position.x) * WALL_REPEL_FORCE : 0.0F;
+    velocity.y += position.y > MAP_HEIGHT - WALL_REPEL_BOUND ? (MAP_HEIGHT - WALL_REPEL_BOUND - position.y) * WALL_REPEL_FORCE : 0.0F;
+}
 void Particle::draw() {
     ofColor color;
     if (this->type == RED)
@@ -91,7 +101,7 @@ void Particle::compute_Force(const Particle& acting_particle){
     // direction /= distance;  // Normalize the direction giati mas noiazei mono to direction tou vector oxi to magnitude tou
     // isws na xreiazetai na dieresw me distance^2 gia normalization alla den nomizw
     
-    const float dt = 0.99;
+    const float dt = 0.99;  //ousiastika einai kati san tribi
     this->velocity = (this->velocity+force_strength * direction) *dt;
     // to dt na koitaksw
 }
