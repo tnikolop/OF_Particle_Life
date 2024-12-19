@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
 
 // Constant Variables
 const short MAP_BORDER = 5;
@@ -52,17 +53,13 @@ class ofApp : public ofBaseApp{
 		// void dragEvent(ofDragInfo dragInfo);
 		// void gotMessage(ofMessage msg);
 
-		// // To have easy access to the color types
-		// std::array<ofColor,3> color_types = {
-		// 	ofColor::red,	// 0
-		// 	ofColor::green,	// 1
-		// 	ofColor::yellow	// 2
-		// };
-
 		vector<Particle> particles;		// vector containing all particles;
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);
-		
-
+	
+	ofxPanel gui;
+	ofxButton button_restart, button_shuffle;
+	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY;
+	ofxIntSlider slider_force_range;
 };

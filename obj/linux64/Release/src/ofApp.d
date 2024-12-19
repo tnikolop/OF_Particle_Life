@@ -320,7 +320,19 @@ obj/linux64/Release/src/ofApp.o: \
  /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/video/ofVideoPlayer.h \
  /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/3d/of3dUtils.h \
  /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/3d/ofCamera.h \
- /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/3d/ofEasyCam.h
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/3d/ofEasyCam.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxGui.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxToggle.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxBaseGui.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxSlider.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxInputField.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxGuiUtils.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxSliderGroup.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxGuiGroup.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxButton.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxLabel.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxColorPicker.h \
+ /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxPanel.h
 /home/tom/UTH/OF_Particle_Life/src/ofApp.h:
 /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/ofMain.h:
 /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/utils/ofConstants.h:
@@ -643,3 +655,15 @@ obj/linux64/Release/src/ofApp.o: \
 /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/3d/of3dUtils.h:
 /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/3d/ofCamera.h:
 /home/tom/Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworks/3d/ofEasyCam.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxGui.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxToggle.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxBaseGui.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxSlider.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxInputField.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxGuiUtils.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxSliderGroup.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxGuiGroup.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxButton.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxLabel.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxColorPicker.h:
+/home/tom/Downloads/of_v0.12.0_linux64gcc6_release/addons/ofxGui/src/ofxPanel.h:
