@@ -57,9 +57,13 @@ class ofApp : public ofBaseApp{
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);
+
+		void restart();
+		void shuffle();
 	
 	ofxPanel gui;
 	ofxButton button_restart, button_shuffle;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY;
 	ofxIntSlider slider_force_range;
+	ofxIntField field_n_particles;
 };

@@ -14,7 +14,11 @@ void ofApp::setup(){
     gui.setup("Settings");
     gui.setPosition(MAP_WIDTH+70,20);
     gui.add(button_restart.setup("RESTART (R)"));
-    gui.add(button_shuffle.setup("SHUFFLE"));
+    button_restart.addListener(this,&ofApp::restart);
+    gui.add(button_shuffle.setup("SHUFFLE (S)"));
+    button_shuffle.addListener(this,&ofApp::shuffle);
+
+    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,1000));
 
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
 
@@ -31,6 +35,22 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+    // isws na mhn einai kai o kalyteros tropos
+    FORCE_RANGE = slider_force_range;
+    number_of_particles = field_n_particles;
+
+    force_matrix[RED][RED] = sliderRR;
+    force_matrix[RED][GREEN] = sliderRG;
+    force_matrix[RED][YELLOW] = sliderRY;
+    force_matrix[GREEN][RED] = sliderGR;
+    force_matrix[GREEN][GREEN] = sliderGG;
+    force_matrix[GREEN][YELLOW] = sliderGY;
+    force_matrix[YELLOW][RED] = sliderYR;
+    force_matrix[YELLOW][GREEN] = sliderYG;
+    force_matrix[YELLOW][YELLOW] = sliderYY;
+
+
     for (int i = 0; i < total_particles; i++)
     {
         for (int j = 0; j < total_particles; j++)
@@ -58,9 +78,10 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    //restart
-    particles.clear();
-    Create_particles();
+    if (key == 'r' || key == 'R')
+        restart();
+    if (key == 's' || key == 'S')
+        shuffle();
 }
 
 // Particle constructor
@@ -138,7 +159,8 @@ void ofApp::Create_particles(){
             Particle newParticle(ofRandom(MAP_WIDTH),ofRandom(MAP_HEIGHT),j);
             particles.push_back(newParticle);
         }
-    }       
+    }
+    total_particles = number_of_particles * NUM_TYPES;
 }
 
 // Initialize with random values the forces of interaction between each particle type
@@ -152,3 +174,20 @@ void ofApp::initialize_forces(float min, float max){
     }    
 }
 
+void ofApp::restart(){
+    particles.clear();
+    Create_particles();
+}
+
+void ofApp::shuffle(){
+    initialize_forces(-MAX_FORCE,MAX_FORCE);
+    sliderRR = force_matrix[RED][RED];
+    sliderRG = force_matrix[RED][GREEN];
+    sliderRY = force_matrix[RED][YELLOW];
+    sliderGR = force_matrix[GREEN][RED];
+    sliderGG = force_matrix[GREEN][GREEN];
+    sliderGY = force_matrix[GREEN][YELLOW];
+    sliderYR = force_matrix[YELLOW][RED];
+    sliderYG = force_matrix[YELLOW][GREEN];
+    sliderYY = force_matrix[YELLOW][YELLOW];
+}
