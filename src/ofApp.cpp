@@ -39,7 +39,8 @@ for (int i = 0; i < particles.size(); i++)
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    particles.clear();
+    Create_particles();
 }
 
 Particle::Particle(float x, float y, int color) {
@@ -86,11 +87,11 @@ void Particle::compute_Force(const Particle& acting_particle){
 
     // Avoid division by zero
     if (distance2 > 0 && distance2 < FORCE_RANGE*FORCE_RANGE) 
-        force_strength = force_matrix[this->type][acting_particle.type];
+        force_strength = force_matrix[this->type][acting_particle.type] / distance2;
     // direction /= distance;  // Normalize the direction giati mas noiazei mono to direction tou vector oxi to magnitude tou
     // isws na xreiazetai na dieresw me distance^2 gia normalization alla den nomizw
     
-    const float dt = 0.69;
+    const float dt = 0.99;
     this->velocity = (this->velocity+force_strength * direction) *dt;
     // to dt na koitaksw
 }

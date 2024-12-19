@@ -52,12 +52,12 @@ class ofApp : public ofBaseApp{
 		// void dragEvent(ofDragInfo dragInfo);
 		// void gotMessage(ofMessage msg);
 
-		// To have easy access to the color types
-		std::array<ofColor,3> color_types = {
-			ofColor::red,	// 0
-			ofColor::green,	// 1
-			ofColor::yellow	// 2
-		};
+		// // To have easy access to the color types
+		// std::array<ofColor,3> color_types = {
+		// 	ofColor::red,	// 0
+		// 	ofColor::green,	// 1
+		// 	ofColor::yellow	// 2
+		// };
 
 		vector<Particle> particles;		// vector containing all particles;
 		
