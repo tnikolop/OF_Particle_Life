@@ -4,9 +4,18 @@ short FORCE_RANGE = 200;
 short number_of_particles = 450;    // per type (color)
 short total_particles = number_of_particles*NUM_TYPES;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
+float viscosity = 0;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+
+//  #pragma omp parallel
+//     {
+//         int thread_id = omp_get_thread_num();
+//         int num_threads = omp_get_num_threads();
+//         std::cout << "Hello from thread " << thread_id << " of " << num_threads << std::endl;
+//     }
+
     ofSetBackgroundColor(0,0,0);    // Black Background Color
     Create_particles();
     initialize_forces(-MAX_FORCE,MAX_FORCE);
@@ -18,9 +27,9 @@ void ofApp::setup(){
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
 
-    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,1000));
-
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
+    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,1000));
+    gui.add(slider_viscosity.setup("VISCOSITY",0.9F,0.1F,1.0F));
 
     gui.add(sliderRR.setup("RED TO RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
     gui.add(sliderRG.setup("RED TO GREEN",force_matrix[RED][GREEN],-MAX_FORCE,MAX_FORCE));
@@ -39,6 +48,7 @@ void ofApp::update(){
     // isws na mhn einai kai o kalyteros tropos
     FORCE_RANGE = slider_force_range;
     number_of_particles = field_n_particles;
+    viscosity = slider_viscosity;
 
     force_matrix[RED][RED] = sliderRR;
     force_matrix[RED][GREEN] = sliderRG;
@@ -50,7 +60,7 @@ void ofApp::update(){
     force_matrix[YELLOW][GREEN] = sliderYG;
     force_matrix[YELLOW][YELLOW] = sliderYY;
 
-
+    #pragma omp parallel for
     for (int i = 0; i < total_particles; i++)
     {
         for (int j = 0; j < total_particles; j++)
@@ -144,8 +154,8 @@ void Particle::compute_Force(const Particle& acting_particle){
     // direction /= distance;  // Normalize the direction giati mas noiazei mono to direction tou vector oxi to magnitude tou
     // isws na xreiazetai na dieresw me distance^2 gia normalization alla den nomizw
     
-    const float dt = 0.99;  //ousiastika einai kati san tribi
-    this->velocity = (this->velocity+force_strength * direction) *dt;
+    // const float dt = 0.999;  //ousiastika einai kati san tribi
+    this->velocity = (this->velocity+force_strength * direction) *viscosity;
     // to dt na koitaksw
 }
 

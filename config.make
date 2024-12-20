@@ -76,7 +76,7 @@ OF_ROOT = /home/tom/Downloads/of_v0.12.0_linux64gcc6_release
 # add a runtime path to search for those shared libraries, since they aren't 
 # incorporated directly into the final executable application binary.
 ################################################################################
-# PROJECT_LDFLAGS=-Wl,-rpath=./libs
+# PROJECT_LDFLAGS=-Wl,-rpath=./libs -fopenmp -lgomp
 
 ################################################################################
 # PROJECT DEFINES
@@ -104,7 +104,7 @@ OF_ROOT = /home/tom/Downloads/of_v0.12.0_linux64gcc6_release
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = 
+# PROJECT_CFLAGS = -fopenmp
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

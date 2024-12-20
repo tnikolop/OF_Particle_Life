@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include <omp.h>
 
 // Constant Variables
 const short MAP_BORDER = 5;
@@ -63,7 +64,7 @@ class ofApp : public ofBaseApp{
 	
 	ofxPanel gui;
 	ofxButton button_restart, button_shuffle;
-	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY;
+	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, slider_viscosity;
 	ofxIntSlider slider_force_range;
 	ofxIntField field_n_particles;
 };
