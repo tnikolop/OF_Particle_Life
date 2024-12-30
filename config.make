@@ -6,9 +6,9 @@
 ################################################################################
 # OF ROOT
 #   The location of your root openFrameworks installation
-#       (default) OF_ROOT = ../../Downloads/of_v0.12.0_linux64gcc6_release 
+#       (default) OF_ROOT = ../../Downloads/OpenFrameworks 
 ################################################################################
-OF_ROOT = /home/tom/Downloads/of_v0.12.0_linux64gcc6_release
+OF_ROOT = /home/nklpls/Downloads/OpenFrameworks
 
 ################################################################################
 # PROJECT ROOT
@@ -76,7 +76,7 @@ OF_ROOT = /home/tom/Downloads/of_v0.12.0_linux64gcc6_release
 # add a runtime path to search for those shared libraries, since they aren't 
 # incorporated directly into the final executable application binary.
 ################################################################################
-# PROJECT_LDFLAGS=-Wl,-rpath=./libs -fopenmp -lgomp
+# PROJECT_LDFLAGS=-Wl,-rpath=./libs
 
 ################################################################################
 # PROJECT DEFINES
@@ -104,7 +104,7 @@ OF_ROOT = /home/tom/Downloads/of_v0.12.0_linux64gcc6_release
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = -fopenmp
+# PROJECT_CFLAGS = 
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
