@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include <omp.h>
+// #include <omp.h>
 
 // Constant Variables
 const short MAP_BORDER = 5;
@@ -55,6 +55,7 @@ class ofApp : public ofBaseApp{
 		// void gotMessage(ofMessage msg);
 
 		vector<Particle> particles;		// vector containing all particles;
+		vector<vector<Particle>> particleGroups; // matrix containing groups of particles by type
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);

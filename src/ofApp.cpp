@@ -20,6 +20,8 @@ void ofApp::setup(){
     Create_particles();
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     
+
+    //========================= CREATE GUI =========================================
     gui.setup("Settings");
     gui.setPosition(MAP_WIDTH+70,20);
     gui.add(button_restart.setup("RESTART (R)"));
@@ -167,12 +169,20 @@ void Particle::compute_Force(const Particle& acting_particle){
 // Creates a specifc number of every particle type and adds them to the vector of particles
 // Every particle is initialized with random positions
 void ofApp::Create_particles(){
-    for (int i = 0; i < number_of_particles; i++)
+    // Initialize the particleGroups vector with empty vectors for each type
+    particleGroups.resize(NUM_TYPES);
+    for (int j = 0; j < NUM_TYPES; j++) {
+        particleGroups[j].reserve(number_of_particles); // reserve space for the particles
+    }
+    particles.reserve(number_of_particles * NUM_TYPES);
+
+    for (int j = 0; j < NUM_TYPES; j++)
     {
-        for (int j=0; j<NUM_TYPES; j++)
+        for (int i = 0; i < number_of_particles; i++)
         {
-            Particle newParticle(ofRandom(MAP_WIDTH),ofRandom(MAP_HEIGHT),j);
+            Particle newParticle(ofRandom(MAP_WIDTH), ofRandom(MAP_HEIGHT), j);
             particles.push_back(newParticle);
+            particleGroups[j].push_back(newParticle);
         }
     }
     total_particles = number_of_particles * NUM_TYPES;
