@@ -9,13 +9,6 @@ float viscosity = 0;
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-//  #pragma omp parallel
-//     {
-//         int thread_id = omp_get_thread_num();
-//         int num_threads = omp_get_num_threads();
-//         std::cout << "Hello from thread " << thread_id << " of " << num_threads << std::endl;
-//     }
-
     ofSetBackgroundColor(0,0,0);    // Black Background Color
     Create_particles();
     initialize_forces(-MAX_FORCE,MAX_FORCE);
@@ -177,11 +170,15 @@ void Particle::compute_Force(const Particle& acting_particle){
 // Every particle is initialized with random positions
 void ofApp::Create_particles(){
     // Initialize the particleGroups vector with empty vectors for each type
-    particleGroups.resize(NUM_TYPES);
-    for (int j = 0; j < NUM_TYPES; j++) {
-        particleGroups[j].reserve(number_of_particles); // reserve space for the particles
-    }
-    all_particles.reserve(number_of_particles * NUM_TYPES);
+    // particleGroups.resize(NUM_TYPES);
+    // for (int j = 0; j < NUM_TYPES; j++) {
+    //     particleGroups[j].reserve(number_of_particles); // reserve space for the particles
+    // }
+    total_particles = number_of_particles * NUM_TYPES;
+    all_particles.reserve(total_particles);
+    all_colors.reserve(total_particles);
+    all_positions.reserve(total_particles);
+
 
     for (int j = 0; j < NUM_TYPES; j++)
     {
@@ -189,19 +186,17 @@ void ofApp::Create_particles(){
         {
             Particle newParticle(ofRandom(MAP_WIDTH), ofRandom(MAP_HEIGHT), j);
             all_particles.push_back(newParticle);
-            particleGroups[j].push_back(newParticle);
+            // particleGroups[j].push_back(newParticle);
+            all_positions.push_back(newParticle.position);     // Extract only the position
+            all_colors.push_back(newParticle.getColor());      // Extract color
         }
-    }
-    total_particles = number_of_particles * NUM_TYPES;
-
-    for (const auto& particle : all_particles) {
-        all_positions.push_back(particle.position);  // Extract only the position
     }
 
     vbo.setVertexData(all_positions.data(),all_positions.size(),GL_STREAM_DRAW);
+    vbo.setColorData(all_colors.data(), all_colors.size(), GL_STREAM_DRAW);
 }
 
-ofColor Particle::getColor() {
+ofColor Particle::getColor() const{
     // Example: Return color based on particle type or some other property
     if (this->type == 0) {
         return ofColor(255, 0, 0);  // Red
@@ -226,6 +221,8 @@ void ofApp::initialize_forces(float min, float max){
 
 void ofApp::restart(){
     all_particles.clear();
+    all_positions.clear();
+    all_colors.clear();
     Create_particles();
 }
 

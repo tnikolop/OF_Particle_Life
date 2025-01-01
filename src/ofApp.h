@@ -33,7 +33,7 @@ class Particle {
 	void draw();
 	void apply_WallRepel();
 	void compute_Force(const Particle& acting_particle);
-	ofColor getColor();
+	ofColor getColor() const;
 };
 
 class ofApp : public ofBaseApp{
@@ -56,8 +56,9 @@ class ofApp : public ofBaseApp{
 		// void gotMessage(ofMessage msg);
 
 		vector<Particle> all_particles;				// vector containing all particles;
-		vector<vector<Particle>> particleGroups; 	// matrix containing groups of particles by type
+		// vector<vector<Particle>> particleGroups; 	// matrix containing groups of particles by type
 		vector<glm::vec2> all_positions;			// this is needed for the vbo	
+		vector<ofFloatColor> all_colors;  				// also for vbo
 
 		
 		void Create_particles();
