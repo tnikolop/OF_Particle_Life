@@ -68,12 +68,12 @@ void ofApp::update(){
         for (int j = 0; j < total_particles; j++)
         {
             if (i!= j) {
-                particles[i].compute_Force(particles[j]);
+                all_particles[i].compute_Force(all_particles[j]);
             }
         }
-        particles[i].apply_WallRepel();
+        all_particles[i].apply_WallRepel();
     }
-    for (auto& particle : particles) {
+    for (auto& particle : all_particles) {
             particle.update();
         }
 }
@@ -82,9 +82,9 @@ void ofApp::update(){
 void ofApp::draw(){
     gui.draw();
 
-    for (int i = 0; i < particles.size(); i++)
+    for (int i = 0; i < all_particles.size(); i++)
         {
-            particles[i].draw();
+            all_particles[i].draw();
         }
 }
 
@@ -174,14 +174,14 @@ void ofApp::Create_particles(){
     for (int j = 0; j < NUM_TYPES; j++) {
         particleGroups[j].reserve(number_of_particles); // reserve space for the particles
     }
-    particles.reserve(number_of_particles * NUM_TYPES);
+    all_particles.reserve(number_of_particles * NUM_TYPES);
 
     for (int j = 0; j < NUM_TYPES; j++)
     {
         for (int i = 0; i < number_of_particles; i++)
         {
             Particle newParticle(ofRandom(MAP_WIDTH), ofRandom(MAP_HEIGHT), j);
-            particles.push_back(newParticle);
+            all_particles.push_back(newParticle);
             particleGroups[j].push_back(newParticle);
         }
     }
@@ -200,7 +200,7 @@ void ofApp::initialize_forces(float min, float max){
 }
 
 void ofApp::restart(){
-    particles.clear();
+    all_particles.clear();
     Create_particles();
 }
 

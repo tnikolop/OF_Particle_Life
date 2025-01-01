@@ -54,7 +54,7 @@ class ofApp : public ofBaseApp{
 		// void dragEvent(ofDragInfo dragInfo);
 		// void gotMessage(ofMessage msg);
 
-		vector<Particle> particles;		// vector containing all particles;
+		vector<Particle> all_particles;		// vector containing all particles;
 		vector<vector<Particle>> particleGroups; // matrix containing groups of particles by type
 		
 		void Create_particles();
