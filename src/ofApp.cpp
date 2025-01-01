@@ -76,6 +76,13 @@ void ofApp::update(){
     for (auto& particle : all_particles) {
             particle.update();
         }
+    
+    // Update the VBO if positions change
+    for (size_t i = 0; i < all_particles.size(); i++) {
+        all_positions[i] = all_particles[i].position;  // Update positions in all_positions
+    }
+    // Update the VBO with the new positions
+    vbo.updateVertexData(all_positions.data(), all_positions.size());
 }
 
 //--------------------------------------------------------------
@@ -186,7 +193,25 @@ void ofApp::Create_particles(){
         }
     }
     total_particles = number_of_particles * NUM_TYPES;
+
+    for (const auto& particle : all_particles) {
+        all_positions.push_back(particle.position);  // Extract only the position
+    }
+
+    vbo.setVertexData(all_positions.data(),all_positions.size(),GL_STREAM_DRAW);
 }
+
+ofColor Particle::getColor() {
+    // Example: Return color based on particle type or some other property
+    if (this->type == 0) {
+        return ofColor(255, 0, 0);  // Red
+    } else if (type == 1) {
+        return ofColor(0, 255, 0);  // Green
+    } else {
+        return ofColor(255, 255, 0);  // Yellow
+    }
+}
+
 
 // Initialize with random values the forces of interaction between each particle type
 void ofApp::initialize_forces(float min, float max){

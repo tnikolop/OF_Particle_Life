@@ -33,6 +33,7 @@ class Particle {
 	void draw();
 	void apply_WallRepel();
 	void compute_Force(const Particle& acting_particle);
+	ofColor getColor();
 };
 
 class ofApp : public ofBaseApp{
@@ -54,8 +55,10 @@ class ofApp : public ofBaseApp{
 		// void dragEvent(ofDragInfo dragInfo);
 		// void gotMessage(ofMessage msg);
 
-		vector<Particle> all_particles;		// vector containing all particles;
-		vector<vector<Particle>> particleGroups; // matrix containing groups of particles by type
+		vector<Particle> all_particles;				// vector containing all particles;
+		vector<vector<Particle>> particleGroups; 	// matrix containing groups of particles by type
+		vector<glm::vec2> all_positions;			// this is needed for the vbo	
+
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);
@@ -68,4 +71,6 @@ class ofApp : public ofBaseApp{
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, slider_viscosity;
 	ofxIntSlider slider_force_range;
 	ofxIntField field_n_particles;
+
+	ofVbo vbo;
 };

@@ -6,9 +6,9 @@
 ################################################################################
 # OF ROOT
 #   The location of your root openFrameworks installation
-#       (default) OF_ROOT = ../../Downloads/OpenFrameworks 
+#       (default) OF_ROOT = ../../.. 
 ################################################################################
-OF_ROOT = /home/nklpls/Downloads/OpenFrameworks
+OF_ROOT = ../../..
 
 ################################################################################
 # PROJECT ROOT
