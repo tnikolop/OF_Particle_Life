@@ -44,25 +44,13 @@ class ofApp : public ofBaseApp{
 		void draw();
 
 		void keyPressed(int key);
-		// void keyReleased(int key);
-		// void mouseMoved(int x, int y );
-		// void mouseDragged(int x, int y, int button);
-		// void mousePressed(int x, int y, int button);
-		// void mouseReleased(int x, int y, int button);
-		// void mouseEntered(int x, int y);
-		// void mouseExited(int x, int y);
-		// void windowResized(int w, int h);
-		// void dragEvent(ofDragInfo dragInfo);
-		// void gotMessage(ofMessage msg);
 
-		vector<Particle> all_particles;				// vector containing all particles;
-		vector<glm::vec2> all_positions;			// this is needed for the vbo	
-		vector<ofFloatColor> all_colors;  				// also for vbo
-
+		vector<Particle> all_particles;		// vector containing all particles;
+		vector<glm::vec2> all_positions;	// this is needed for the vbo	
+		vector<ofFloatColor> all_colors;  	// also for vbo
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);
-
 		void restart();
 		void shuffle();
 	
@@ -71,6 +59,5 @@ class ofApp : public ofBaseApp{
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, slider_viscosity;
 	ofxIntSlider slider_force_range;
 	ofxIntField field_n_particles;
-
 	ofVbo vbo;
 };
