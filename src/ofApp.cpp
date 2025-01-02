@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-short FORCE_RANGE = 200;
+short FORCE_RANGE = 2000;
 short number_of_particles = 1000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
 float viscosity = 0;
