@@ -2,7 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-// #include <omp.h>
+#include <omp.h>
+#include <ParticleThread.h>
 
 // Constant Variables
 const short MAP_BORDER = 5;
@@ -34,6 +35,26 @@ class Particle {
 	void apply_WallRepel();
 	void compute_Force(const Particle& acting_particle);
 	ofFloatColor getColor() const;
+};
+
+class ParticleThread : public ofThread {
+public:
+    std::vector<Particle>* particles;
+    int startIdx, endIdx;
+
+    ParticleThread(std::vector<Particle>* particles, int startIdx, int endIdx)
+        : particles(particles), startIdx(startIdx), endIdx(endIdx) {}
+
+    void threadedFunction() {
+        for (int i = startIdx; i < endIdx; i++) {
+            for (int j = 0; j < particles->size(); j++) {
+                if (i != j) {
+                    (*particles)[i].compute_Force((*particles)[j]);
+                }
+            }
+            (*particles)[i].apply_WallRepel();
+        }
+    }
 };
 
 class ofApp : public ofBaseApp{

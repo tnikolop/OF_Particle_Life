@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
-short FORCE_RANGE = 2000;
-short number_of_particles = 1000;                       // per type (color)
+short FORCE_RANGE = 200;
+short number_of_particles = 3000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
 float viscosity = 0;
 short total_particles = number_of_particles*NUM_TYPES;
@@ -9,7 +9,12 @@ float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+    // int num_threads = 0;
+    // #pragma omp parallel
+    // {
+    //     num_threads = omp_get_num_threads();
+    // }
+    // ofLog() << "OpenMP is enabled with " << num_threads << " threads.";
     ofSetBackgroundColor(0,0,0);    // Black Background Color
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     restart();      // create particles and initialize vectors
@@ -55,17 +60,31 @@ void ofApp::update(){
     force_matrix[YELLOW][GREEN] = sliderYG;
     force_matrix[YELLOW][YELLOW] = sliderYY;
 
-    // #pragma omp parallel for
-    for (int i = 0; i < total_particles; i++)
-    {
-        for (int j = 0; j < total_particles; j++)
-        {
-            if (i!= j) {
-                all_particles[i].compute_Force(all_particles[j]);
-            }
-        }
-        all_particles[i].apply_WallRepel();
+    int numThreads = 12; // Number of threads to use
+    int particlesPerThread = total_particles / numThreads;
+    std::vector<std::unique_ptr<ParticleThread>> threads;
+
+    for (int i = 0; i < numThreads; i++) {
+        int startIdx = i * particlesPerThread;
+        int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
+        threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx));
+        threads.back()->startThread();
     }
+
+    for (auto& thread : threads) {
+        thread->waitForThread();
+    }
+
+    // for (int i = 0; i < total_particles; i++)
+    // {
+    //     for (int j = 0; j < total_particles; j++)
+    //     {
+    //         if (i!= j) {
+    //             all_particles[i].compute_Force(all_particles[j]);
+    //         }
+    //     }
+    //     all_particles[i].apply_WallRepel();
+    // }
     for (size_t i = 0; i < all_particles.size(); i++) {
         all_particles[i].update();
         all_positions[i] = all_particles[i].position;  // Update positions in all_positions
