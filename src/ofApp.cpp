@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
 short FORCE_RANGE = 200;
-short number_of_particles = 650;    // per type (color)
+short number_of_particles = 1000;    // per type (color)
 short total_particles = number_of_particles*NUM_TYPES;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
 float viscosity = 0;
@@ -38,6 +38,7 @@ void ofApp::setup(){
 }
 
 //--------------------------------------------------------------
+// thelei simazema edw mesa
 void ofApp::update(){
 
     // isws na mhn einai kai o kalyteros tropos
@@ -82,10 +83,11 @@ void ofApp::update(){
 void ofApp::draw(){
     gui.draw();
 
-    for (int i = 0; i < all_particles.size(); i++)
-        {
-            all_particles[i].draw();
-        }
+    vbo.draw(GL_POINTS,0,total_particles);
+    // for (int i = 0; i < all_particles.size(); i++)
+    //     {
+    //         all_particles[i].draw();
+    //     }
 }
 
 //--------------------------------------------------------------
@@ -133,6 +135,7 @@ void Particle::apply_WallRepel(){
         velocity.y += (MAP_HEIGHT - WALL_REPEL_BOUND - position.y) * WALL_REPEL_FORCE;
 }
 
+// -------- NOT IN USE --------
 // Draw particle on screen
 void Particle::draw() {
     ofColor color;
@@ -169,11 +172,6 @@ void Particle::compute_Force(const Particle& acting_particle){
 // Creates a specifc number of every particle type and adds them to the vector of particles
 // Every particle is initialized with random positions
 void ofApp::Create_particles(){
-    // Initialize the particleGroups vector with empty vectors for each type
-    // particleGroups.resize(NUM_TYPES);
-    // for (int j = 0; j < NUM_TYPES; j++) {
-    //     particleGroups[j].reserve(number_of_particles); // reserve space for the particles
-    // }
     total_particles = number_of_particles * NUM_TYPES;
     all_particles.reserve(total_particles);
     all_colors.reserve(total_particles);
@@ -196,10 +194,11 @@ void ofApp::Create_particles(){
     vbo.setColorData(all_colors.data(), all_colors.size(), GL_STREAM_DRAW);
 }
 
-ofColor Particle::getColor() const{
+// thelei veltiwsei logika
+ofFloatColor Particle::getColor() const{
     // Example: Return color based on particle type or some other property
     if (this->type == 0) {
-        return ofColor(255, 0, 0);  // Red
+        return ofFloatColor(255, 0, 0);  // Red
     } else if (type == 1) {
         return ofColor(0, 255, 0);  // Green
     } else {
