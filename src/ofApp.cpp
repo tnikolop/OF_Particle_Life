@@ -1,20 +1,14 @@
 #include "ofApp.h"
 
 short FORCE_RANGE = 200;
-short number_of_particles = 3000;                       // per type (color)
+short number_of_particles = 1000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
 float viscosity = 0;
-short total_particles = number_of_particles*NUM_TYPES;
+short total_particles = -1;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    // int num_threads = 0;
-    // #pragma omp parallel
-    // {
-    //     num_threads = omp_get_num_threads();
-    // }
-    // ofLog() << "OpenMP is enabled with " << num_threads << " threads.";
     ofSetBackgroundColor(0,0,0);    // Black Background Color
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     restart();      // create particles and initialize vectors
@@ -28,7 +22,7 @@ void ofApp::setup(){
     button_shuffle.addListener(this,&ofApp::shuffle);
 
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
-    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,1000));
+    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,5000));
     gui.add(slider_viscosity.setup("VISCOSITY",0.002F,0.0F,0.5F));
 
     gui.add(sliderRR.setup("RED TO RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
@@ -67,7 +61,7 @@ void ofApp::update(){
     for (int i = 0; i < numThreads; i++) {
         int startIdx = i * particlesPerThread;
         int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
-        threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx));
+        threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles));
         threads.back()->startThread();
     }
 

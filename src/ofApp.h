@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include <omp.h>
 #include <ParticleThread.h>
 
 // Constant Variables
@@ -40,21 +39,21 @@ class Particle {
 class ParticleThread : public ofThread {
 public:
     std::vector<Particle>* particles;
-    int startIdx, endIdx;
+    int startIdx, endIdx, total_particles;
 
-    ParticleThread(std::vector<Particle>* particles, int startIdx, int endIdx)
-        : particles(particles), startIdx(startIdx), endIdx(endIdx) {}
+    ParticleThread(std::vector<Particle>* particles, int start, int end, int total_particles)
+        : particles(particles), startIdx(start), endIdx(end), total_particles(total_particles) {}
 
-    void threadedFunction() {
-        for (int i = startIdx; i < endIdx; i++) {
-            for (int j = 0; j < particles->size(); j++) {
-                if (i != j) {
-                    (*particles)[i].compute_Force((*particles)[j]);
-                }
-            }
-            (*particles)[i].apply_WallRepel();
-        }
-    }
+	void threadedFunction() {
+		for (int i = startIdx; i < endIdx; i++) {
+			for (int j = 0; j < total_particles; j++) {
+				if (i != j) {
+					(*particles)[i].compute_Force((*particles)[j]);
+				}
+			}
+			(*particles)[i].apply_WallRepel();
+		}
+	}
 };
 
 class ofApp : public ofBaseApp{
@@ -80,5 +79,5 @@ class ofApp : public ofBaseApp{
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, slider_viscosity;
 	ofxIntSlider slider_force_range;
 	ofxIntField field_n_particles;
-	ofVbo vbo;
+	ofVbo vbo;								// more efficient batch drawing
 };
