@@ -6,10 +6,17 @@ int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computationa
 float viscosity = 0;
 short total_particles = -1;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
+short numThreads;
+int particlesPerThread;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
+    numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
+    if (numThreads == 0) {
+        numThreads = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
+        cerr << "Only 1 thread is being utilized" << endl;
+    }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     restart();      // create particles and initialize vectors
     
@@ -54,14 +61,7 @@ void ofApp::update(){
     force_matrix[YELLOW][GREEN] = sliderYG;
     force_matrix[YELLOW][YELLOW] = sliderYY;
 
-    int numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
-    if (numThreads == 0) {
-        numThreads = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
-        cerr << "Only 1 thread is being utilized" << endl;
-    }
-    int particlesPerThread = total_particles / numThreads;
-    std::vector<std::unique_ptr<ParticleThread>> threads;
-
+    // Compute forces using Threads
     for (int i = 0; i < numThreads; i++) {
         int startIdx = i * particlesPerThread;
         int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
@@ -71,7 +71,6 @@ void ofApp::update(){
     for (auto& thread : threads) {
         thread->waitForThread();
     }
-
     for (size_t i = 0; i < all_particles.size(); i++) {
         all_particles[i].update();
         all_positions[i] = all_particles[i].position;  // Update positions in all_positions
@@ -207,7 +206,10 @@ void ofApp::restart(){
     all_particles.clear();
     all_positions.clear();
     all_colors.clear();
+    threads.clear();
     total_particles = number_of_particles * NUM_TYPES;
+    particlesPerThread = total_particles / numThreads;
+    threads.reserve(numThreads);
     all_particles.reserve(total_particles);
     all_colors.reserve(total_particles);
     all_positions.reserve(total_particles);

@@ -8,7 +8,6 @@
 const short MAP_BORDER = 5;
 const short MAP_WIDTH = 800 + MAP_BORDER;
 const short MAP_HEIGHT = 800 + MAP_BORDER;
-const short ATOM_WIDTH = 1;
 const float MAX_FORCE = 25;
 const short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
 const float WALL_REPEL_FORCE = 0.1;
@@ -27,7 +26,6 @@ class Particle {
 	int type;				// Type of the particle (for interaction rules)
 
 	Particle(float x, float y, int color);
-	// ~Particle();
 
 	void update();
 	void draw();
@@ -68,6 +66,7 @@ class ofApp : public ofBaseApp{
 		vector<Particle> all_particles;		// vector containing all particles;
 		vector<glm::vec2> all_positions;	// this is needed for the vbo	
 		vector<ofFloatColor> all_colors;  	// also for vbo
+		vector<std::unique_ptr<ParticleThread>> threads;
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);
