@@ -22,7 +22,7 @@ void ofApp::setup(){
     button_shuffle.addListener(this,&ofApp::shuffle);
 
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
-    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,5000));
+    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
     gui.add(slider_viscosity.setup("VISCOSITY",0.002F,0.0F,0.5F));
 
     gui.add(sliderRR.setup("RED TO RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
@@ -54,7 +54,11 @@ void ofApp::update(){
     force_matrix[YELLOW][GREEN] = sliderYG;
     force_matrix[YELLOW][YELLOW] = sliderYY;
 
-    int numThreads = 12; // Number of threads to use
+    int numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
+    if (numThreads == 0) {
+        numThreads = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
+        cerr << "Only 1 thread is being utilized" << endl;
+    }
     int particlesPerThread = total_particles / numThreads;
     std::vector<std::unique_ptr<ParticleThread>> threads;
 
@@ -64,21 +68,10 @@ void ofApp::update(){
         threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles));
         threads.back()->startThread();
     }
-
     for (auto& thread : threads) {
         thread->waitForThread();
     }
 
-    // for (int i = 0; i < total_particles; i++)
-    // {
-    //     for (int j = 0; j < total_particles; j++)
-    //     {
-    //         if (i!= j) {
-    //             all_particles[i].compute_Force(all_particles[j]);
-    //         }
-    //     }
-    //     all_particles[i].apply_WallRepel();
-    // }
     for (size_t i = 0; i < all_particles.size(); i++) {
         all_particles[i].update();
         all_positions[i] = all_particles[i].position;  // Update positions in all_positions
