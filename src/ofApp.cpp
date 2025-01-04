@@ -1,17 +1,29 @@
 #include "ofApp.h"
 
+// Constant Variables
+const int NUM_TYPES = 3;        // Number of different particle types
+const short MAP_BORDER = 10;     // This is used so the particles can not be on the edge of the screen for better visibility 
+const float MAX_FORCE = 25;
+short MAP_WIDTH;                
+short MAP_HEIGHT;
+const short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
+const float WALL_REPEL_FORCE = 0.1;
+
 short FORCE_RANGE = 200;
-short number_of_particles = 1000;                       // per type (color)
+short number_of_particles = 2000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
-float viscosity = 0;
+float viscosity;
 short total_particles = -1;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
 short numThreads;
 int particlesPerThread;
-
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
+    // The map is offset MAP_BORDER in both axis for better visibility
+    MAP_WIDTH = 0.7 * ofGetScreenWidth() + MAP_BORDER;      
+    MAP_HEIGHT = 0.95 * ofGetScreenHeight() + MAP_BORDER;
+    
     numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
     if (numThreads == 0) {
         numThreads = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
@@ -30,7 +42,7 @@ void ofApp::setup(){
 
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
     gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
-    gui.add(slider_viscosity.setup("VISCOSITY",0.002F,0.0F,0.5F));
+    gui.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.35F));
 
     gui.add(sliderRR.setup("RED TO RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
     gui.add(sliderRG.setup("RED TO GREEN",force_matrix[RED][GREEN],-MAX_FORCE,MAX_FORCE));
