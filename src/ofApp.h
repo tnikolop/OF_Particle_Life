@@ -3,13 +3,12 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include <ParticleThread.h>
-
-
+const short MAP_BORDER = 10;     // This is used so the particles can not be on the edge of the screen for better visibility 
+const float MAX_FORCE = 25;
+const float WALL_REPEL_FORCE_MAX = 2;
 #define RED 0
 #define GREEN 1
 #define YELLOW 2
-
-
 
 class Particle {
 	public:
@@ -22,7 +21,7 @@ class Particle {
 
 	void update();
 	void draw();
-	void apply_WallRepel();
+	void apply_WallRepel(float force);
 	void compute_Force(const Particle& acting_particle);
 	ofFloatColor getColor() const;
 };
@@ -31,9 +30,10 @@ class ParticleThread : public ofThread {
 public:
     std::vector<Particle>* particles;
     int startIdx, endIdx, total_particles;
+	float Wall_Repel_force;
 
-    ParticleThread(std::vector<Particle>* particles, int start, int end, int total_particles)
-        : particles(particles), startIdx(start), endIdx(end), total_particles(total_particles) {}
+    ParticleThread(std::vector<Particle>* particles, int start, int end, int total_particles, float Wall_Repel_force)
+        : particles(particles), startIdx(start), endIdx(end), total_particles(total_particles), Wall_Repel_force(Wall_Repel_force) {}
 
 	void threadedFunction() {
 		for (int i = startIdx; i < endIdx; i++) {
@@ -42,7 +42,7 @@ public:
 					(*particles)[i].compute_Force((*particles)[j]);
 				}
 			}
-			(*particles)[i].apply_WallRepel();
+			(*particles)[i].apply_WallRepel(Wall_Repel_force);
 		}
 	}
 };
@@ -68,7 +68,8 @@ class ofApp : public ofBaseApp{
 	
 	ofxPanel gui;
 	ofxButton button_restart, button_shuffle;
-	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, slider_viscosity;
+	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 
+					slider_viscosity, slider_wall_repel_force;
 	ofxIntSlider slider_force_range;
 	ofxIntField field_n_particles;
 	ofVbo vbo;								// more efficient batch drawing

@@ -2,13 +2,9 @@
 
 // Constant Variables
 const int NUM_TYPES = 3;        // Number of different particle types
-const short MAP_BORDER = 10;     // This is used so the particles can not be on the edge of the screen for better visibility 
-const float MAX_FORCE = 25;
 short MAP_WIDTH;                
 short MAP_HEIGHT;
 const short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
-const float WALL_REPEL_FORCE = 0.1;
-
 short FORCE_RANGE = 200;
 short number_of_particles = 2000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
@@ -43,6 +39,7 @@ void ofApp::setup(){
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
     gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
     gui.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.35F));
+    gui.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
     gui.add(sliderRR.setup("RED TO RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
     gui.add(sliderRG.setup("RED TO GREEN",force_matrix[RED][GREEN],-MAX_FORCE,MAX_FORCE));
@@ -77,7 +74,7 @@ void ofApp::update(){
     for (int i = 0; i < numThreads; i++) {
         int startIdx = i * particlesPerThread;
         int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
-        threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles));
+        threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles,slider_wall_repel_force));
         threads.back()->startThread();
     }
     for (auto& thread : threads) {
@@ -130,16 +127,18 @@ void Particle::update(){
 
 // Force that repells the particles from the edge of the map
 // so they do not stay there
-void Particle::apply_WallRepel(){
+void Particle::apply_WallRepel(float force){
+    if (force == 0)
+        return;
     if (position.x < WALL_REPEL_BOUND)
-        velocity.x += (WALL_REPEL_BOUND - position.x) * WALL_REPEL_FORCE;
+        velocity.x += (WALL_REPEL_BOUND - position.x) * force;
     else if (position.x > MAP_WIDTH - WALL_REPEL_BOUND)
-        velocity.x += (MAP_WIDTH - WALL_REPEL_BOUND - position.x) * WALL_REPEL_FORCE;
+        velocity.x += (MAP_WIDTH - WALL_REPEL_BOUND - position.x) * force;
 
     if (position.y < WALL_REPEL_BOUND)
-        velocity.y += (WALL_REPEL_BOUND - position.y) * WALL_REPEL_FORCE;
+        velocity.y += (WALL_REPEL_BOUND - position.y) * force;
     else if (position.y > MAP_HEIGHT - WALL_REPEL_BOUND)
-        velocity.y += (MAP_HEIGHT - WALL_REPEL_BOUND - position.y) * WALL_REPEL_FORCE;
+        velocity.y += (MAP_HEIGHT - WALL_REPEL_BOUND - position.y) * force;
 }
 
 // -------- NOT IN USE (OUTDATED) --------
