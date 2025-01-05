@@ -60,7 +60,6 @@ class ofApp : public ofBaseApp{
 		vector<Particle> all_particles;		// vector containing all particles;
 		vector<glm::vec2> all_positions;	// this is needed for the vbo	
 		vector<ofFloatColor> all_colors;  	// also for vbo
-		vector<std::unique_ptr<ParticleThread>> threads;
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);

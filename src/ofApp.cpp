@@ -5,14 +5,13 @@ const int NUM_TYPES = 3;        // Number of different particle types
 short MAP_WIDTH;                
 short MAP_HEIGHT;
 short FORCE_RANGE = 200;
-short number_of_particles = 2000;                       // per type (color)
+short number_of_particles = 1000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
 float viscosity;
 short total_particles = -1;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
 short numThreads;
 int particlesPerThread;
-short MAX_THREADS;
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
@@ -20,9 +19,9 @@ void ofApp::setup(){
     MAP_WIDTH = 0.7 * ofGetScreenWidth() + MAP_BORDER;      
     MAP_HEIGHT = 0.95 * ofGetScreenHeight() + MAP_BORDER;
     
-    MAX_THREADS = std::thread::hardware_concurrency(); // Get the number of available hardware threads
-    if (MAX_THREADS == 0) {
-        MAX_THREADS = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
+    numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
+    if (numThreads == 0) {
+        numThreads = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
         cerr << "Only 1 thread is being utilized" << endl;
     }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
@@ -71,22 +70,44 @@ void ofApp::update(){
     force_matrix[YELLOW][GREEN] = sliderYG;
     force_matrix[YELLOW][YELLOW] = sliderYY;
 
-    // Compute forces using Threads
-    for (int i = 0; i < numThreads; i++) {
-        int startIdx = i * particlesPerThread;
-        int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
-        threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles,slider_wall_repel_force));
-        threads.back()->startThread();
+	vector<std::unique_ptr<ParticleThread>> threads;
+
+    if (particlesPerThread > 1)
+    {
+        // Compute forces using Threads
+        for (int i = 0; i < numThreads; i++) {
+            int startIdx = i * particlesPerThread;
+            int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
+            threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles,slider_wall_repel_force));
+            threads.back()->startThread();
+        }
+        for (auto& thread : threads) {
+            thread->waitForThread();
+        }
+        // cerr << "FLAG 1" << endl;
     }
-    for (auto& thread : threads) {
-        thread->waitForThread();
+    else    // No threads
+    {
+        for (int i = 0; i < total_particles; i++)
+        {
+            for (int j = 0; j < total_particles; j++)
+            {
+                if (i!= j) {
+                    all_particles[i].compute_Force(all_particles[j]);
+                }
+            }
+            all_particles[i].apply_WallRepel(slider_wall_repel_force);
+        }
     }
+    // cerr << "FLAG 2" << endl;
     for (size_t i = 0; i < all_particles.size(); i++) {
         all_particles[i].update(toggle_reverse_velocity);
         all_positions[i] = all_particles[i].position;  // Update positions in all_positions
     }
+    // cerr << "FLAG 3" << endl;
     // Update the VBO with the new positions
     vbo.updateVertexData(all_positions.data(), all_positions.size());
+        // cerr << "FLAG 4" << endl;
 }
 
 //--------------------------------------------------------------
@@ -226,15 +247,11 @@ void ofApp::restart(){
     all_particles.clear();
     all_positions.clear();
     all_colors.clear();
-    threads.clear();
+    // threads.clear();
 
     total_particles = number_of_particles * NUM_TYPES;
-    particlesPerThread = total_particles / MAX_THREADS;
-    if (particlesPerThread < 1)
-        numThreads = 1;
-    else
-        numThreads = MAX_THREADS;
-    threads.reserve(numThreads);
+    particlesPerThread = total_particles / numThreads;
+    // threads.reserve(numThreads);
     
     all_particles.reserve(total_particles);
     all_colors.reserve(total_particles);
