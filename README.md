@@ -6,4 +6,3 @@ TO add:
 - save/load settings
 - extra colors
 - Wall Repel force slider
-- Wall Repel Bound

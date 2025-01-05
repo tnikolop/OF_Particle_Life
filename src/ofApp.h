@@ -5,7 +5,8 @@
 #include <ParticleThread.h>
 const short MAP_BORDER = 10;     // This is used so the particles can not be on the edge of the screen for better visibility 
 const float MAX_FORCE = 25;
-const float WALL_REPEL_FORCE_MAX = 2;
+const float WALL_REPEL_FORCE_MAX = 10;
+const short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
 #define RED 0
 #define GREEN 1
 #define YELLOW 2
@@ -19,7 +20,7 @@ class Particle {
 
 	Particle(float x, float y, int color);
 
-	void update();
+	void update(bool toggle);
 	void draw();
 	void apply_WallRepel(float force);
 	void compute_Force(const Particle& acting_particle);
@@ -68,6 +69,7 @@ class ofApp : public ofBaseApp{
 	
 	ofxPanel gui;
 	ofxButton button_restart, button_shuffle;
+	ofxToggle toggle_reverse_velocity;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 
 					slider_viscosity, slider_wall_repel_force;
 	ofxIntSlider slider_force_range;

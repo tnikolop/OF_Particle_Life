@@ -4,7 +4,6 @@
 const int NUM_TYPES = 3;        // Number of different particle types
 short MAP_WIDTH;                
 short MAP_HEIGHT;
-const short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
 short FORCE_RANGE = 200;
 short number_of_particles = 2000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
@@ -13,6 +12,7 @@ short total_particles = -1;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};
 short numThreads;
 int particlesPerThread;
+short MAX_THREADS;
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
@@ -20,9 +20,9 @@ void ofApp::setup(){
     MAP_WIDTH = 0.7 * ofGetScreenWidth() + MAP_BORDER;      
     MAP_HEIGHT = 0.95 * ofGetScreenHeight() + MAP_BORDER;
     
-    numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
-    if (numThreads == 0) {
-        numThreads = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
+    MAX_THREADS = std::thread::hardware_concurrency(); // Get the number of available hardware threads
+    if (MAX_THREADS == 0) {
+        MAX_THREADS = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
         cerr << "Only 1 thread is being utilized" << endl;
     }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
@@ -35,6 +35,7 @@ void ofApp::setup(){
     button_restart.addListener(this,&ofApp::restart);
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
+    gui.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));    
 
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
     gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
@@ -81,7 +82,7 @@ void ofApp::update(){
         thread->waitForThread();
     }
     for (size_t i = 0; i < all_particles.size(); i++) {
-        all_particles[i].update();
+        all_particles[i].update(toggle_reverse_velocity);
         all_positions[i] = all_particles[i].position;  // Update positions in all_positions
     }
     // Update the VBO with the new positions
@@ -110,19 +111,27 @@ Particle::Particle(float x, float y, int color) {
 }
 
 // Update particles position based on its updated velocity
-void Particle::update(){
+void Particle::update(bool toggle){
     position += velocity;  // Add velocity to position to move the particle
-    
+    short t = toggle ? -1 : 1;  //if toggle is on reverse velocity on map edge
+
     // the particles must always be on screen
-    if (position.x > MAP_WIDTH)
+    if (position.x > MAP_WIDTH) {
         position.x = MAP_WIDTH - 1;
-    else if (position.x < MAP_BORDER)
+        velocity.x *= t;
+    }
+    else if (position.x < MAP_BORDER) {
         position.x = MAP_BORDER;
-    
-    if (position.y > MAP_HEIGHT)
+        velocity.x *= t;
+    }
+    if (position.y > MAP_HEIGHT) {
         position.y = MAP_HEIGHT - 1;
-    else if (position.y < MAP_BORDER)
+        velocity.y *= t;
+    }
+    else if (position.y < MAP_BORDER) {
         position.y = MAP_BORDER;
+        velocity.y *= t;
+    }
 }
 
 // Force that repells the particles from the edge of the map
@@ -218,9 +227,15 @@ void ofApp::restart(){
     all_positions.clear();
     all_colors.clear();
     threads.clear();
+
     total_particles = number_of_particles * NUM_TYPES;
-    particlesPerThread = total_particles / numThreads;
+    particlesPerThread = total_particles / MAX_THREADS;
+    if (particlesPerThread < 1)
+        numThreads = 1;
+    else
+        numThreads = MAX_THREADS;
     threads.reserve(numThreads);
+    
     all_particles.reserve(total_particles);
     all_colors.reserve(total_particles);
     all_positions.reserve(total_particles);
