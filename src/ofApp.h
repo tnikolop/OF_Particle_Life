@@ -36,15 +36,31 @@ public:
     ParticleThread(std::vector<Particle>* particles, int start, int end, int total_particles, float Wall_Repel_force)
         : particles(particles), startIdx(start), endIdx(end), total_particles(total_particles), Wall_Repel_force(Wall_Repel_force) {}
 
+	~ParticleThread() {
+    	ofLog() << "ParticleThread destructor called" << "!" <<this->getThreadId()<<"@";
+	}
+	
 	void threadedFunction() {
-		for (int i = startIdx; i < endIdx; i++) {
-			for (int j = 0; j < total_particles; j++) {
-				if (i != j) {
-					(*particles)[i].compute_Force((*particles)[j]);
+		try
+		{
+			for (int i = startIdx; i < endIdx; i++) {
+				for (int j = 0; j < total_particles; j++) {
+					if (i != j) {
+						(*particles)[i].compute_Force((*particles)[j]);
+					}
 				}
+				// cerr << this->getThreadName() +  ": FLAG 1" << endl;
+				(*particles)[i].apply_WallRepel(Wall_Repel_force);
+				// cerr << this->getThreadName() +  ": FLAG 2" << endl;
 			}
-			(*particles)[i].apply_WallRepel(Wall_Repel_force);
 		}
+		catch (const std::exception& e) {
+        std::cerr << "Exception in thread: " << e.what() << std::endl;
+		}
+		catch (...) {
+        std::cerr << "Unknown exception in thread." << std::endl;
+    	}
+		
 	}
 };
 

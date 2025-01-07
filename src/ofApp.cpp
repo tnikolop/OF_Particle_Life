@@ -5,7 +5,7 @@ const int NUM_TYPES = 3;        // Number of different particle types
 short MAP_WIDTH;                
 short MAP_HEIGHT;
 short FORCE_RANGE = 200;
-short number_of_particles = 1000;                       // per type (color)
+short number_of_particles = 10;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
 float viscosity;
 short total_particles = -1;
@@ -70,19 +70,25 @@ void ofApp::update(){
     force_matrix[YELLOW][GREEN] = sliderYG;
     force_matrix[YELLOW][YELLOW] = sliderYY;
 
-	vector<std::unique_ptr<ParticleThread>> threads;
-
     if (particlesPerThread > 1)
     {
         // Compute forces using Threads
-        for (int i = 0; i < numThreads; i++) {
-            int startIdx = i * particlesPerThread;
-            int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
-            threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles,slider_wall_repel_force));
-            threads.back()->startThread();
+        try
+        {
+	    vector<std::unique_ptr<ParticleThread>> threads;
+            for (int i = 0; i < numThreads; i++) {
+                int startIdx = i * particlesPerThread;
+                int endIdx = (i == numThreads - 1) ? total_particles : startIdx + particlesPerThread;
+                threads.emplace_back(std::make_unique<ParticleThread>(&all_particles, startIdx, endIdx,total_particles,slider_wall_repel_force));
+                threads.back()->startThread();
+            }
+            for (auto& thread : threads) {
+                thread->waitForThread();
+            }
         }
-        for (auto& thread : threads) {
-            thread->waitForThread();
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
         }
         // cerr << "FLAG 1" << endl;
     }
@@ -251,6 +257,7 @@ void ofApp::restart(){
 
     total_particles = number_of_particles * NUM_TYPES;
     particlesPerThread = total_particles / numThreads;
+    // cerr << particlesPerThread << endl;
     // threads.reserve(numThreads);
     
     all_particles.reserve(total_particles);
