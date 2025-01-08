@@ -70,7 +70,7 @@ void ofApp::update(){
     force_matrix[YELLOW][GREEN] = sliderYG;
     force_matrix[YELLOW][YELLOW] = sliderYY;
 
-    if (particlesPerThread > 1)
+    if (particlesPerThread > 25)
     {
         // Compute forces using Threads
         try

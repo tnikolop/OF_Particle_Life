@@ -6,9 +6,9 @@
 ################################################################################
 # OF ROOT
 #   The location of your root openFrameworks installation
-#       (default) OF_ROOT = ../../.. 
+#       (default) OF_ROOT = ../../Downloads/of_v0.12.0_linux64gcc6_release 
 ################################################################################
-OF_ROOT = ../../..
+OF_ROOT = /home/tom/Downloads/of_v0.12.0_linux64gcc6_release
 
 ################################################################################
 # PROJECT ROOT

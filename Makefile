@@ -6,7 +6,7 @@ endif
 
 # make sure the the OF_ROOT location is defined
 ifndef OF_ROOT
-	OF_ROOT=$(realpath ../../..)
+	OF_ROOT=$(realpath ../../Downloads/of_v0.12.0_linux64gcc6_release)
 endif
 
 # call the project makefile!

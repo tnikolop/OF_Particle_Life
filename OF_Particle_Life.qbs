@@ -3,15 +3,16 @@ import qbs.Process
 import qbs.File
 import qbs.FileInfo
 import qbs.TextFile
-import "../../../libs/openFrameworksCompiled/project/qtcreator/ofApp.qbs" as ofApp
+import "../../Downloads/of_v0.12.0_linux64gcc6_release/libs/openFrameworksCompiled/project/qtcreator/ofApp.qbs" as ofApp
 
 Project{
-    property string of_root: "../../.."
+    property string of_root: "../../Downloads/of_v0.12.0_linux64gcc6_release"
 
     ofApp {
         name: { return FileInfo.baseName(sourceDirectory) }
 
         files: [
+            'src/ParticleThread.h',
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',

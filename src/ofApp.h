@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include <ParticleThread.h>
 const short MAP_BORDER = 10;     // This is used so the particles can not be on the edge of the screen for better visibility 
 const float MAX_FORCE = 25;
 const float WALL_REPEL_FORCE_MAX = 10;
@@ -37,7 +36,7 @@ public:
         : particles(particles), startIdx(start), endIdx(end), total_particles(total_particles), Wall_Repel_force(Wall_Repel_force) {}
 
 	~ParticleThread() {
-    	ofLog() << "ParticleThread destructor called" << "!" <<this->getThreadId()<<"@";
+    	// ofLog() << "ParticleThread destructor called" << "!" <<this->getThreadId()<<"@";
 	}
 	
 	void threadedFunction() {
