@@ -1,2 +1,6 @@
+.vscode
 /obj
-OF_Particle_Life
+/bin
+*.make
+Makefile
+*.qbs
