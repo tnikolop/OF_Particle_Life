@@ -82,6 +82,7 @@ class ofApp : public ofBaseApp{
 		void shuffle();
 	
 	ofxPanel gui;
+	ofxGuiGroup RedSettings, GreenSettings, YellowSettings;
 	ofxButton button_restart, button_shuffle;
 	ofxToggle toggle_reverse_velocity;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 

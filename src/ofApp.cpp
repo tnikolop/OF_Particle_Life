@@ -5,7 +5,7 @@ const int NUM_TYPES = 3;        // Number of different particle types
 short MAP_WIDTH;                
 short MAP_HEIGHT;
 short FORCE_RANGE = 200;
-short number_of_particles = 10;                       // per type (color)
+short number_of_particles = 1000;                       // per type (color)
 int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
 float viscosity;
 short total_particles = -1;
@@ -16,7 +16,7 @@ int particlesPerThread;
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
     // The map is offset MAP_BORDER in both axis for better visibility
-    MAP_WIDTH = 0.7 * ofGetScreenWidth() + MAP_BORDER;      
+    MAP_WIDTH = 0.75 * ofGetScreenWidth() + MAP_BORDER;      
     MAP_HEIGHT = 0.95 * ofGetScreenHeight() + MAP_BORDER;
     
     numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
@@ -30,27 +30,50 @@ void ofApp::setup(){
     //========================= CREATE GUI =========================================
     gui.setup("Settings");
     gui.setPosition(MAP_WIDTH+70,20);
+    gui.setWidthElements(260);
     gui.add(button_restart.setup("RESTART (R)"));
     button_restart.addListener(this,&ofApp::restart);
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
     gui.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));    
-
     gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
     gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
     gui.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.35F));
     gui.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
-    gui.add(sliderRR.setup("RED TO RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderRG.setup("RED TO GREEN",force_matrix[RED][GREEN],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderRY.setup("RED TO YELLOW",force_matrix[RED][YELLOW],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderGR.setup("GREEN TO RED",force_matrix[GREEN][RED],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderGG.setup("GREEN TO GREEN",force_matrix[GREEN][GREEN],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderGY.setup("GREEN TO YELLOW",force_matrix[GREEN][YELLOW],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderYR.setup("YELLOW TO RED",force_matrix[YELLOW][RED],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderYG.setup("YELLOW TO GREEN",force_matrix[YELLOW][GREEN],-MAX_FORCE,MAX_FORCE));
-    gui.add(sliderYY.setup("YELLOW TO YELLOW",force_matrix[YELLOW][YELLOW],-MAX_FORCE,MAX_FORCE));
-}
+    gui.add(&RedSettings);
+    RedSettings.setup("RED SETTINGS");
+    // RedSettings.setHeaderBackgroundColor(ofColor::darkRed);
+    // RedSettings.setBorderColor(ofColor::red);
+    RedSettings.add(sliderRR.setup("RED X RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
+    RedSettings.add(sliderRG.setup("RED X GREEN",force_matrix[RED][GREEN],-MAX_FORCE,MAX_FORCE));
+    RedSettings.add(sliderRY.setup("RED X YELLOW",force_matrix[RED][YELLOW],-MAX_FORCE,MAX_FORCE));
+    sliderRR.setFillColor(ofColor::darkRed);
+    sliderRG.setFillColor(ofColor::darkRed);
+    sliderRY.setFillColor(ofColor::darkRed);
+
+    gui.add(&GreenSettings);
+    GreenSettings.setup("GREEN SETTINGS");
+    // GreenSettings.setHeaderBackgroundColor(ofColor::darkGreen);
+    // GreenSettings.setBorderColor(ofColor::green);
+    GreenSettings.add(sliderGR.setup("GREEN X RED",force_matrix[GREEN][RED],-MAX_FORCE,MAX_FORCE));
+    GreenSettings.add(sliderGG.setup("GREEN X GREEN",force_matrix[GREEN][GREEN],-MAX_FORCE,MAX_FORCE));
+    GreenSettings.add(sliderGY.setup("GREEN X YELLOW",force_matrix[GREEN][YELLOW],-MAX_FORCE,MAX_FORCE));
+    sliderGR.setFillColor(ofColor::darkGreen);
+    sliderGG.setFillColor(ofColor::darkGreen);
+    sliderGY.setFillColor(ofColor::darkGreen);
+
+    gui.add(&YellowSettings);
+    YellowSettings.setup("YELLOW SETTINGS");
+    // YellowSettings.setHeaderBackgroundColor(ofColor::darkGoldenRod);
+    // YellowSettings.setBorderColor(ofColor::yellow);
+    YellowSettings.add(sliderYR.setup("YELLOW X RED",force_matrix[YELLOW][RED],-MAX_FORCE,MAX_FORCE));
+    YellowSettings.add(sliderYG.setup("YELLOW X GREEN",force_matrix[YELLOW][GREEN],-MAX_FORCE,MAX_FORCE));
+    YellowSettings.add(sliderYY.setup("YELLOW X YELLOW",force_matrix[YELLOW][YELLOW],-MAX_FORCE,MAX_FORCE));
+    sliderYR.setFillColor(ofColor::darkGoldenRod);
+    sliderYG.setFillColor(ofColor::darkGoldenRod);
+    sliderYY.setFillColor(ofColor::darkGoldenRod);
+    }
 
 //--------------------------------------------------------------
 void ofApp::update(){
