@@ -12,8 +12,10 @@ TO ADD:
 - Extra Colors
 - 3D version
 
-- INSATLLATION error
-usr/bin/ld.gold: error: cannot find -lXi
-/usr/bin/ld.gold: error: cannot find -lXcursor
-/usr/bin/ld.gold: error: cannot find -lXinerama
-sudo apt-get install libxi-dev libxcursor-dev libxinerama-dev
+INSATLLATION:
+- https://openframeworks.cc/setup/linux-install/
+-error
+  usr/bin/ld.gold: error: cannot find -lXi
+  /usr/bin/ld.gold: error: cannot find -lXcursor
+  /usr/bin/ld.gold: error: cannot find -lXinerama
+  sudo apt-get install libxi-dev libxcursor-dev libxinerama-dev
