@@ -78,6 +78,7 @@ class ofApp : public ofBaseApp{
 		
 		void Create_particles();
 		void initialize_forces(float min, float max);
+		void initialize_color_force_range(short min, short max);
 		void restart();
 		void shuffle();
 	
@@ -87,7 +88,8 @@ class ofApp : public ofBaseApp{
 	ofxToggle toggle_reverse_velocity;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 
 					slider_viscosity, slider_wall_repel_force;
-	ofxIntSlider slider_force_range;
+	ofxIntSlider slider_force_range, slider_rangeRR, slider_rangeRG, slider_rangeRY,
+				 slider_rangeGR, slider_rangeGG, slider_rangeGY, slider_rangeYR, slider_rangeYG, slider_rangeYY;
 	ofxIntField field_n_particles;
 	ofVbo vbo;								// more efficient batch drawing
 };
