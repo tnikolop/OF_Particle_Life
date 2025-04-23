@@ -26,7 +26,7 @@ void ofApp::setup(){
         cerr << "Only 1 thread is being utilized" << endl;
     }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
-    initialize_color_force_range(-FORCE_RANGE,FORCE_RANGE);
+    initialize_color_force_range(0,FORCE_RANGE);
     restart();      // create particles and initialize vectors
     
     //========================= CREATE GUI =========================================
@@ -53,9 +53,9 @@ void ofApp::setup(){
     sliderRR.setFillColor(ofColor::darkRed);
     sliderRG.setFillColor(ofColor::darkRed);
     sliderRY.setFillColor(ofColor::darkRed);
-    RedSettings.add(slider_rangeRR.setup("Radius of RED X RED",color_force_range_matrix[RED][RED],-FORCE_RANGE,FORCE_RANGE));
-    RedSettings.add(slider_rangeRG.setup("Radius of RED X GREEN",color_force_range_matrix[RED][GREEN],-FORCE_RANGE,FORCE_RANGE));
-    RedSettings.add(slider_rangeRY.setup("Radius of RED X YELLOW",color_force_range_matrix[RED][YELLOW],-FORCE_RANGE,FORCE_RANGE));
+    RedSettings.add(slider_rangeRR.setup("Radius of RED X RED",color_force_range_matrix[RED][RED],0,FORCE_RANGE));
+    RedSettings.add(slider_rangeRG.setup("Radius of RED X GREEN",color_force_range_matrix[RED][GREEN],0,FORCE_RANGE));
+    RedSettings.add(slider_rangeRY.setup("Radius of RED X YELLOW",color_force_range_matrix[RED][YELLOW],0,FORCE_RANGE));
 
 
     gui.add(&GreenSettings);
@@ -68,9 +68,9 @@ void ofApp::setup(){
     sliderGR.setFillColor(ofColor::darkGreen);
     sliderGG.setFillColor(ofColor::darkGreen);
     sliderGY.setFillColor(ofColor::darkGreen);
-    GreenSettings.add(slider_rangeGR.setup("Radius of GREEN X RED",color_force_range_matrix[GREEN][RED],-FORCE_RANGE,FORCE_RANGE));
-    GreenSettings.add(slider_rangeGG.setup("Radius of GREEN X GREEN",color_force_range_matrix[GREEN][GREEN],-FORCE_RANGE,FORCE_RANGE));
-    GreenSettings.add(slider_rangeGY.setup("Radius of GREEN X YELLOW",color_force_range_matrix[GREEN][YELLOW],-FORCE_RANGE,FORCE_RANGE));
+    GreenSettings.add(slider_rangeGR.setup("Radius of GREEN X RED",color_force_range_matrix[GREEN][RED],0,FORCE_RANGE));
+    GreenSettings.add(slider_rangeGG.setup("Radius of GREEN X GREEN",color_force_range_matrix[GREEN][GREEN],0,FORCE_RANGE));
+    GreenSettings.add(slider_rangeGY.setup("Radius of GREEN X YELLOW",color_force_range_matrix[GREEN][YELLOW],0,FORCE_RANGE));
 
     gui.add(&YellowSettings);
     YellowSettings.setup("YELLOW SETTINGS");
@@ -82,9 +82,9 @@ void ofApp::setup(){
     sliderYR.setFillColor(ofColor::darkGoldenRod);
     sliderYG.setFillColor(ofColor::darkGoldenRod);
     sliderYY.setFillColor(ofColor::darkGoldenRod);
-    YellowSettings.add(slider_rangeYR.setup("Radius of YELLOW X RED",color_force_range_matrix[YELLOW][RED],-FORCE_RANGE,FORCE_RANGE));
-    YellowSettings.add(slider_rangeYG.setup("Radius of YELLOW X GREEN",color_force_range_matrix[YELLOW][GREEN],-FORCE_RANGE,FORCE_RANGE));
-    YellowSettings.add(slider_rangeYY.setup("Radius of YELLOW X YELLOW",color_force_range_matrix[YELLOW][YELLOW],-FORCE_RANGE,FORCE_RANGE));
+    YellowSettings.add(slider_rangeYR.setup("Radius of YELLOW X RED",color_force_range_matrix[YELLOW][RED],0,FORCE_RANGE));
+    YellowSettings.add(slider_rangeYG.setup("Radius of YELLOW X GREEN",color_force_range_matrix[YELLOW][GREEN],0,FORCE_RANGE));
+    YellowSettings.add(slider_rangeYY.setup("Radius of YELLOW X YELLOW",color_force_range_matrix[YELLOW][YELLOW],0,FORCE_RANGE));
     }
 
 //--------------------------------------------------------------
@@ -244,9 +244,9 @@ void Particle::compute_Force(const Particle& acting_particle){
     
     float distance2 = glm::distance2(this->position,acting_particle.position);  // distance2 = distance^2 for less computation time
     float force_strength=0;     // if out of range dont apply any force
-
+    float force_range = color_force_range_matrix[this->type][acting_particle.type];
     // Avoid division by zero
-    if (distance2 > 0 && distance2 < FORCE_RANGE_SQUARED)
+    if (distance2 > 0 && distance2 < force_range * force_range )
         force_strength = force_matrix[this->type][acting_particle.type] / distance2;
 
     this->velocity = (this->velocity+force_strength * direction) *(1-viscosity);
@@ -280,7 +280,6 @@ ofFloatColor Particle::getColor() const{
         return ofFloatColor(1, 1, 0);  // Yellow
     }
 }
-
 
 // Initialize with random values the forces of interaction between each particle type
 void ofApp::initialize_forces(float min, float max){
@@ -322,10 +321,10 @@ void ofApp::restart(){
     Create_particles();
 }
 
-// populates the force matrix with random values and updates the gui sliders
+// populates the force and force_range matrixes with random values and updates the gui sliders
 void ofApp::shuffle(){
     initialize_forces(-MAX_FORCE,MAX_FORCE);
-    initialize_color_force_range(-FORCE_RANGE,FORCE_RANGE);
+    initialize_color_force_range(0,FORCE_RANGE);
     sliderRR = force_matrix[RED][RED];
     sliderRG = force_matrix[RED][GREEN];
     sliderRY = force_matrix[RED][YELLOW];
