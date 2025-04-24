@@ -5,6 +5,7 @@ This is the new version of Particle Life using Open Frameworks
 TO DO:
 - Better Thread Management
 - Better GUI
+- if all 3 of the same color radius is 0 then fps drops dramatically
   
 TO ADD:
 - Change each individual color-color range

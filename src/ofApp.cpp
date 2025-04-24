@@ -28,7 +28,6 @@ void ofApp::setup(){
         cerr << "Only 1 thread is being utilized" << endl;
     }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
-    // initialize_color_force_range(0,FORCE_RANGE);
     restart();      // create particles and initialize vectors
     
     //========================= CREATE GUI =========================================
@@ -224,21 +223,6 @@ void Particle::apply_WallRepel(float force){
         velocity.y += (MAP_HEIGHT - WALL_REPEL_BOUND - position.y) * force;
 }
 
-// -------- NOT IN USE (OUTDATED) --------
-// Draw particle on screen
-void Particle::draw() {
-    ofColor color;
-    if (this->type == RED)
-        color = ofColor::red;
-    else if (this->type == GREEN)
-        color = ofColor::green;
-    else if (this->type == YELLOW)
-        color = ofColor::yellow;
-
-    ofSetColor(color);
-    ofDrawCircle(position,1);
-}
-
 // Calculate the forces that act on this specific particle 
 // based on another particle
 void Particle::compute_Force(const Particle& acting_particle){
@@ -247,7 +231,7 @@ void Particle::compute_Force(const Particle& acting_particle){
     float distance2 = glm::distance2(this->position,acting_particle.position);  // distance2 = distance^2 for less computation time
     float force_strength=0;     // if out of range dont apply any force
     float force_range = color_force_range_matrix_squared[this->type][acting_particle.type];
-    // isws xreiazete na kanw ypologismo apeksw to tetragwno gia na einai pio grhgoro
+
     // Avoid division by zero
     if (distance2 > 0 && distance2 < force_range)
         force_strength = force_matrix[this->type][acting_particle.type] / distance2;
@@ -293,18 +277,6 @@ void ofApp::initialize_forces(float min, float max){
             force_matrix[i][j] = ofRandom(min,max);
         }
     }    
-}
-
-// Initialize with random values the force range of each individual color againts every other color
-void ofApp::initialize_color_force_range(short min, short max) {
-    for (int i = 0; i < NUM_TYPES; i++)
-    {
-        for (int j = 0; j < NUM_TYPES; j++)
-        {
-            // color_force_range_matrix[i][j] = ofRandom(min,max);
-
-        }
-    }
 }
 
 // Clears all vectors and creates particles from scratch
