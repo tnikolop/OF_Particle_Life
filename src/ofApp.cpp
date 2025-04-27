@@ -346,12 +346,9 @@ void ofApp::createPresetsDirectory() {
 
     if (!ofDirectory(path).exists()) {
         bool created = ofDirectory::createDirectory(path, true, true);
-        if (created) {
-            ofLogNotice("Setup") << "Presets directory created successfully at: " << path;
-        } else {
+        if (created = false)
+        {
             ofLogError("Setup") << "Failed to create presets directory at: " << path;
         }
-    } else {
-        ofLogNotice("Setup") << "Presets directory already exists at: " << path;
     }
 }
