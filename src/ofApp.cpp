@@ -29,6 +29,8 @@ void ofApp::setup(){
     }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     restart();      // create particles and initialize vectors
+
+    createPresetsDirectory();
     
     //========================= CREATE GUI =========================================
     gui.setup("Settings");
@@ -43,6 +45,14 @@ void ofApp::setup(){
     gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
     gui.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.35F));
     gui.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
+
+    // gui.add(button_save_settings.setup("Save Settings"));
+    // button_save_settings.addListener(this,&ofApp::save_settings);
+    // gui.add(button_load_settings.setup("Load Settings"));
+    // button_load_settings.addListener(this,&ofApp::load_settings);
+
+    // gui.add(dropdown.setup("Presets"));
+    // dropdown.addListener(this, &ofApp::presetChanged);
 
     gui.add(&RedSettings);
     RedSettings.setup("RED SETTINGS");
@@ -319,4 +329,29 @@ void ofApp::shuffle(){
     slider_rangeYR = ofRandom(0,FORCE_RANGE);
     slider_rangeYG = ofRandom(0,FORCE_RANGE);
     slider_rangeYY = ofRandom(0,FORCE_RANGE);   
+}
+
+// Save all current gui parameters
+void ofApp::save_settings(){
+}
+
+// Load saved settings from a list
+void ofApp::load_settings(){}
+
+void ofApp::presetChanged(string &preset){}
+
+// Creates a directory for storing all the saved simulation settings
+void ofApp::createPresetsDirectory() {
+    const string path = ofToDataPath("presets", true);
+
+    if (!ofDirectory(path).exists()) {
+        bool created = ofDirectory::createDirectory(path, true, true);
+        if (created) {
+            ofLogNotice("Setup") << "Presets directory created successfully at: " << path;
+        } else {
+            ofLogError("Setup") << "Failed to create presets directory at: " << path;
+        }
+    } else {
+        ofLogNotice("Setup") << "Presets directory already exists at: " << path;
+    }
 }

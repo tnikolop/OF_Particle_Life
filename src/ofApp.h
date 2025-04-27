@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ofxDropdown.h"
+
 const short MAP_BORDER = 10;     // This is used so the particles can not be on the edge of the screen for better visibility 
 const float MAX_FORCE = 25;
 const float WALL_REPEL_FORCE_MAX = 10;
@@ -81,10 +83,16 @@ class ofApp : public ofBaseApp{
 		void initialize_color_force_range(short min, short max);
 		void restart();
 		void shuffle();
+		void save_settings();
+		void load_settings();
+		void presetChanged(string &preset);	
+
+		void createPresetsDirectory();
+		
 	
 	ofxPanel gui;
 	ofxGuiGroup RedSettings, GreenSettings, YellowSettings;
-	ofxButton button_restart, button_shuffle;
+	ofxButton button_restart, button_shuffle, button_save_settings, button_load_settings;
 	ofxToggle toggle_reverse_velocity;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 
 					slider_viscosity, slider_wall_repel_force;
@@ -92,4 +100,8 @@ class ofApp : public ofBaseApp{
 				 slider_rangeGR, slider_rangeGG, slider_rangeGY, slider_rangeYR, slider_rangeYG, slider_rangeYY;
 	ofxIntField field_n_particles;
 	ofVbo vbo;								// more efficient batch drawing
+
+	ofxDropdown dropdown;
+	// vector<string> presetFiles;
+
 };

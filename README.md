@@ -12,7 +12,7 @@ This is the new version of Particle Life using Open Frameworks
 - ta threads krasaroun se xamhlo arithmo se tyxaies stigmes
 
 ### TO ADD:
--- Change each individual color-color range
+- Change individual number of particles per color
 - Save / Load Settings
 - Extra Colors
 - 3D version
@@ -28,3 +28,6 @@ This is the new version of Particle Life using Open Frameworks
   - - sudo apt-get install libxi-dev libxcursor-dev libxinerama-dev
  
  - After installing Project Generator use it to import the downloaded github, in order to create the make files
+
+https://github.com/roymacdonald/ofxDropdown dropdown 
+also use project generator to add addons
