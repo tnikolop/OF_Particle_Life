@@ -43,10 +43,9 @@ void ofApp::setup(){
     gui.add(button_save_settings.setup("Save Simulation Settings"));
     button_save_settings.addListener(this,&ofApp::save_settings);
     gui.add(dropdown.setup("Load Saved Simulation Settings"));
+    dropdown.addListener(this,&ofApp::load_settings);
     if (!dropdown.populateFromDirectory(ofToDataPath("Settings"), {"xml"}))
         ofLogError("Could not populate dropdown from path: "+ofToDataPath("Settings"));
-    gui.add(button_load_settings.setup("Load Settings"));
-    button_load_settings.addListener(this,&ofApp::load_settings);
 
     gui.add(&SimSettings);
     SimSettings.setup("Simulation Settings");
@@ -304,6 +303,7 @@ void ofApp::restart(){
     all_colors.reserve(total_particles);
     all_positions.reserve(total_particles);
     Create_particles();
+    dropdown.deselect();
 }
 
 // populates the force and force_range matrixes with random values and updates the gui sliders
@@ -340,14 +340,16 @@ void ofApp::save_settings(){
 }
 
 // Load saved settings from a list
-void ofApp::load_settings(){
-    RedSettings.loadFromFile("Settings/rgb_settings.xml");
-    GreenSettings.loadFromFile("Settings/rgb_settings.xml");
-    YellowSettings.loadFromFile("Settings/rgb_settings.xml");
-    SimSettings.loadFromFile("Settings/rgb_settings.xml");
+void ofApp::load_settings(ofFile &file){
+    string file_name = file.getAbsolutePath();
+    
+    RedSettings.loadFromFile(file_name);
+    GreenSettings.loadFromFile(file_name);
+    YellowSettings.loadFromFile(file_name);
+    SimSettings.loadFromFile(file_name);
+    
+    
 }
-
-void ofApp::presetChanged(string &preset){}
 
 // Creates a directory for storing all the saved simulation settings
 void ofApp::create_settings_dir() {

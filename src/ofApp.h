@@ -84,15 +84,12 @@ class ofApp : public ofBaseApp{
 		void restart();
 		void shuffle();
 		void save_settings();
-		void load_settings();
-		void presetChanged(string &preset);	
-
 		void create_settings_dir();
-		
+		void load_settings(ofFile &file);
 	
 	ofxPanel gui;
 	ofxGuiGroup RedSettings, GreenSettings, YellowSettings, SimSettings;
-	ofxButton button_restart, button_shuffle, button_save_settings, button_load_settings;
+	ofxButton button_restart, button_shuffle, button_save_settings;
 	ofxToggle toggle_reverse_velocity;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 
 					slider_viscosity, slider_wall_repel_force;
