@@ -43,7 +43,8 @@ void ofApp::setup(){
     gui.add(button_save_settings.setup("Save Simulation Settings"));
     button_save_settings.addListener(this,&ofApp::save_settings);
     gui.add(dropdown.setup("Load Saved Simulation Settings"));
-    dropdown.addListener(this, &ofApp::presetChanged);
+    if (!dropdown.populateFromDirectory(ofToDataPath("Settings"), {"xml"}))
+        ofLogError("Could not populate dropdown from path: "+ofToDataPath("Settings"));
     gui.add(button_load_settings.setup("Load Settings"));
     button_load_settings.addListener(this,&ofApp::load_settings);
 
@@ -329,7 +330,7 @@ void ofApp::shuffle(){
     slider_rangeYY = ofRandom(0,FORCE_RANGE);   
 }
 
-// Save all current gui parameters
+// Save all current Simulation parameters
 void ofApp::save_settings(){
     RedSettings.saveToFile("Settings/rgb_settings.xml");
     GreenSettings.saveToFile("Settings/rgb_settings.xml");
@@ -354,7 +355,7 @@ void ofApp::create_settings_dir() {
 
     if (!ofDirectory(path).exists()) {
         bool created = ofDirectory::createDirectory(path, true, true);
-        if (created = false)
+        if (created == false)
         {
             ofLogError("Setup") << "Failed to create settings directory at: " << path;
         }

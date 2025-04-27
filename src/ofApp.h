@@ -101,7 +101,7 @@ class ofApp : public ofBaseApp{
 	ofxIntField field_n_particles;
 	ofVbo vbo;								// more efficient batch drawing
 
-	ofxDropdown dropdown;
+	ofxDirDropdown dropdown;
 	// vector<string> presetFiles;
 
 };
