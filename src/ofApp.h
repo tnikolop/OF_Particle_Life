@@ -91,7 +91,7 @@ class ofApp : public ofBaseApp{
 		
 	
 	ofxPanel gui;
-	ofxGuiGroup RedSettings, GreenSettings, YellowSettings;
+	ofxGuiGroup RedSettings, GreenSettings, YellowSettings, SimSettings;
 	ofxButton button_restart, button_shuffle, button_save_settings, button_load_settings;
 	ofxToggle toggle_reverse_velocity;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 

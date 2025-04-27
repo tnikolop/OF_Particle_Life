@@ -39,17 +39,22 @@ void ofApp::setup(){
     button_restart.addListener(this,&ofApp::restart);
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
-    gui.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));    
-    gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
-    gui.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
-    gui.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
     gui.add(button_save_settings.setup("Save Simulation Settings"));
     button_save_settings.addListener(this,&ofApp::save_settings);
     gui.add(dropdown.setup("Load Saved Simulation Settings"));
     dropdown.addListener(this, &ofApp::presetChanged);
+    gui.add(button_load_settings.setup("Load Settings"));
+    button_load_settings.addListener(this,&ofApp::load_settings);
 
-    gui.add(&RedSettings);
+    gui.add(&SimSettings);
+    SimSettings.setup("Simulation Settings");
+    SimSettings.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));
+    SimSettings.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
+    SimSettings.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
+    SimSettings.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
+
+    SimSettings.add(&RedSettings);
     RedSettings.setup("RED SETTINGS");
     // RedSettings.setHeaderBackgroundColor(ofColor::darkRed);
     // RedSettings.setBorderColor(ofColor::red);
@@ -64,7 +69,7 @@ void ofApp::setup(){
     RedSettings.add(slider_rangeRY.setup("Radius of RED X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
 
 
-    gui.add(&GreenSettings);
+    SimSettings.add(&GreenSettings);
     GreenSettings.setup("GREEN SETTINGS");
     // GreenSettings.setHeaderBackgroundColor(ofColor::darkGreen);
     // GreenSettings.setBorderColor(ofColor::green);
@@ -78,7 +83,7 @@ void ofApp::setup(){
     GreenSettings.add(slider_rangeGG.setup("Radius of GREEN X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
     GreenSettings.add(slider_rangeGY.setup("Radius of GREEN X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
 
-    gui.add(&YellowSettings);
+    SimSettings.add(&YellowSettings);
     YellowSettings.setup("YELLOW SETTINGS");
     // YellowSettings.setHeaderBackgroundColor(ofColor::darkGoldenRod);
     // YellowSettings.setBorderColor(ofColor::yellow);
@@ -326,10 +331,20 @@ void ofApp::shuffle(){
 
 // Save all current gui parameters
 void ofApp::save_settings(){
+    RedSettings.saveToFile("Settings/rgb_settings.xml");
+    GreenSettings.saveToFile("Settings/rgb_settings.xml");
+    YellowSettings.saveToFile("Settings/rgb_settings.xml");
+    SimSettings.saveToFile("Settings/rgb_settings.xml");
+    
 }
 
 // Load saved settings from a list
-void ofApp::load_settings(){}
+void ofApp::load_settings(){
+    RedSettings.loadFromFile("Settings/rgb_settings.xml");
+    GreenSettings.loadFromFile("Settings/rgb_settings.xml");
+    YellowSettings.loadFromFile("Settings/rgb_settings.xml");
+    SimSettings.loadFromFile("Settings/rgb_settings.xml");
+}
 
 void ofApp::presetChanged(string &preset){}
 
