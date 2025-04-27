@@ -87,7 +87,7 @@ class ofApp : public ofBaseApp{
 		void load_settings();
 		void presetChanged(string &preset);	
 
-		void createPresetsDirectory();
+		void create_settings_dir();
 		
 	
 	ofxPanel gui;
@@ -96,7 +96,7 @@ class ofApp : public ofBaseApp{
 	ofxToggle toggle_reverse_velocity;
 	ofxFloatSlider	sliderRR,sliderRG,sliderRY, sliderGR,sliderGG,sliderGY, sliderYR,sliderYG,sliderYY, 
 					slider_viscosity, slider_wall_repel_force;
-	ofxIntSlider slider_force_range, slider_rangeRR, slider_rangeRG, slider_rangeRY,
+	ofxIntSlider slider_rangeRR, slider_rangeRG, slider_rangeRY,
 				 slider_rangeGR, slider_rangeGG, slider_rangeGY, slider_rangeYR, slider_rangeYG, slider_rangeYY;
 	ofxIntField field_n_particles;
 	ofVbo vbo;								// more efficient batch drawing

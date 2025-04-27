@@ -6,7 +6,6 @@ short MAP_WIDTH;
 short MAP_HEIGHT;
 short FORCE_RANGE = 200;
 short number_of_particles = 1000;                       // per type (color)
-int FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;    // for less computational time
 float viscosity;
 short total_particles = -1;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};               // the forces of attraction of each individual color against every other color
@@ -30,7 +29,7 @@ void ofApp::setup(){
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     restart();      // create particles and initialize vectors
 
-    createPresetsDirectory();
+    create_settings_dir();
     
     //========================= CREATE GUI =========================================
     gui.setup("Settings");
@@ -41,18 +40,14 @@ void ofApp::setup(){
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
     gui.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));    
-    gui.add(slider_force_range.setup("FORCE RANGE",FORCE_RANGE,0,FORCE_RANGE));
     gui.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
-    gui.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.35F));
+    gui.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
     gui.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
-    // gui.add(button_save_settings.setup("Save Settings"));
-    // button_save_settings.addListener(this,&ofApp::save_settings);
-    // gui.add(button_load_settings.setup("Load Settings"));
-    // button_load_settings.addListener(this,&ofApp::load_settings);
-
-    // gui.add(dropdown.setup("Presets"));
-    // dropdown.addListener(this, &ofApp::presetChanged);
+    gui.add(button_save_settings.setup("Save Simulation Settings"));
+    button_save_settings.addListener(this,&ofApp::save_settings);
+    gui.add(dropdown.setup("Load Saved Simulation Settings"));
+    dropdown.addListener(this, &ofApp::presetChanged);
 
     gui.add(&RedSettings);
     RedSettings.setup("RED SETTINGS");
@@ -100,8 +95,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    FORCE_RANGE = slider_force_range;
-    FORCE_RANGE_SQUARED = FORCE_RANGE * FORCE_RANGE;
     number_of_particles = field_n_particles;
     viscosity = slider_viscosity;
 
@@ -341,14 +334,14 @@ void ofApp::load_settings(){}
 void ofApp::presetChanged(string &preset){}
 
 // Creates a directory for storing all the saved simulation settings
-void ofApp::createPresetsDirectory() {
-    const string path = ofToDataPath("presets", true);
+void ofApp::create_settings_dir() {
+    const string path = ofToDataPath("Settings", true);
 
     if (!ofDirectory(path).exists()) {
         bool created = ofDirectory::createDirectory(path, true, true);
         if (created = false)
         {
-            ofLogError("Setup") << "Failed to create presets directory at: " << path;
+            ofLogError("Setup") << "Failed to create settings directory at: " << path;
         }
     }
 }
