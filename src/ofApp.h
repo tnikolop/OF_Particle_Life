@@ -99,6 +99,8 @@ class ofApp : public ofBaseApp{
 	ofVbo vbo;								// more efficient batch drawing
 
 	ofxDirDropdown dropdown;
+	ofxInputField<string> field_get_name;	// input field to enter the name for saving the settings
+	ofxLabel feedback;						// visual feedback for saving/loading settings
 	// vector<string> presetFiles;
 
 };
