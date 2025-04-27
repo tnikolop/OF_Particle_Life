@@ -1,19 +1,23 @@
-A simple program to simulate primitive Artificial Life using simple rules of attraction or repulsion among atom-like particles, producing complex self-organzing life-like patterns.
+# Particle Life Simulator
+ A simple program to simulate primitive Artificial Life using simple rules of attraction or repulsion among atom-like particles, producing complex self-organzing life-like patterns.
 
 This is the new version of Particle Life using Open Frameworks
 
-TO DO:
+### TO DO:
 - Better Thread Management
 - Better GUI
-- if all 3 of the same color radius is 0 then fps drops dramatically
   
-TO ADD:
-- Change each individual color-color range
+### BUG FIXES
+- if all 3 of the same color radius is 0 then fps drops dramatically
+- ta threads krasaroun se xamhlo arithmo se tyxaies stigmes
+
+### TO ADD:
+-- Change each individual color-color range
 - Save / Load Settings
 - Extra Colors
 - 3D version
 
-INSATLLATION:
+### INSATLLATION:
 - https://openframeworks.cc/download/ Downlaod
 - https://openframeworks.cc/setup/linux-install/ Follow steps
 -If you see the following error:
