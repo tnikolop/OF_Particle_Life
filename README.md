@@ -13,7 +13,6 @@ This is the new version of Particle Life using Open Frameworks
 
 ### TO ADD:
 - Change individual number of particles per color
-- Extra Colors
 - 3D version
 
 ### INSATLLATION:

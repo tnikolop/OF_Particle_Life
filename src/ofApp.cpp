@@ -1,11 +1,10 @@
 #include "ofApp.h"
 
 // Constant Variables
-const int NUM_TYPES = 3;        // Number of different particle types
 short MAP_WIDTH;                
 short MAP_HEIGHT;
 short FORCE_RANGE = 200;
-short number_of_particles = 1000;                       // per type (color)
+short number_of_particles[NUM_TYPES] = {1000,1000,1000};                       // per type (color)
 float viscosity;
 short total_particles = -1;
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};               // the forces of attraction of each individual color against every other color
@@ -14,7 +13,6 @@ int color_force_range_matrix_squared[NUM_TYPES][NUM_TYPES]{{0}};      // the for
                                                                         // dont calculate the square distance thouasands of times needlesly
 short numThreads;
 int particlesPerThread;
-const string settings_folder_path = "Settings";         //relative to bin/data
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
@@ -43,12 +41,13 @@ void ofApp::setup(){
     SimSettings.setup("Simulation Settings");
     gui.add(&SimSettings);
     SimSettings.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));
-    SimSettings.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
+    SimSettings.add(field_n_particles.setup("PARTICLES PER COLOR",1000,1,MAX_PARTICLES));
     SimSettings.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
     SimSettings.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
     RedSettings.setup("RED SETTINGS");
     SimSettings.add(&RedSettings);
+    RedSettings.add(field_number_R.setup("Number of Particles",number_of_particles[RED],1,MAX_PARTICLES));
     RedSettings.add(sliderRR.setup("RED X RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
     RedSettings.add(sliderRG.setup("RED X GREEN",force_matrix[RED][GREEN],-MAX_FORCE,MAX_FORCE));
     RedSettings.add(sliderRY.setup("RED X YELLOW",force_matrix[RED][YELLOW],-MAX_FORCE,MAX_FORCE));
@@ -61,6 +60,7 @@ void ofApp::setup(){
 
     GreenSettings.setup("GREEN SETTINGS");
     SimSettings.add(&GreenSettings);
+    GreenSettings.add(field_number_G.setup("Number of Particles",number_of_particles[GREEN],1,MAX_PARTICLES));
     GreenSettings.add(sliderGR.setup("GREEN X RED",force_matrix[GREEN][RED],-MAX_FORCE,MAX_FORCE));
     GreenSettings.add(sliderGG.setup("GREEN X GREEN",force_matrix[GREEN][GREEN],-MAX_FORCE,MAX_FORCE));
     GreenSettings.add(sliderGY.setup("GREEN X YELLOW",force_matrix[GREEN][YELLOW],-MAX_FORCE,MAX_FORCE));
@@ -73,6 +73,7 @@ void ofApp::setup(){
 
     YellowSettings.setup("YELLOW SETTINGS");
     SimSettings.add(&YellowSettings);
+    YellowSettings.add(field_number_Y.setup("Number of Particles",number_of_particles[YELLOW],1,MAX_PARTICLES));
     YellowSettings.add(sliderYR.setup("YELLOW X RED",force_matrix[YELLOW][RED],-MAX_FORCE,MAX_FORCE));
     YellowSettings.add(sliderYG.setup("YELLOW X GREEN",force_matrix[YELLOW][GREEN],-MAX_FORCE,MAX_FORCE));
     YellowSettings.add(sliderYY.setup("YELLOW X YELLOW",force_matrix[YELLOW][YELLOW],-MAX_FORCE,MAX_FORCE));
@@ -97,7 +98,10 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    number_of_particles = field_n_particles;
+    // number_of_particles = field_n_particles;
+    number_of_particles[RED] = field_number_R;
+    number_of_particles[GREEN] = field_number_G;
+    number_of_particles[YELLOW] = field_number_Y;
     viscosity = slider_viscosity;
 
     // this needs to be automatic for dynamic number of types
@@ -249,7 +253,7 @@ void Particle::compute_Force(const Particle& acting_particle){
 void ofApp::Create_particles(){
     for (int j = 0; j < NUM_TYPES; j++)
     {
-        for (int i = 0; i < number_of_particles; i++)
+        for (int i = 0; i < number_of_particles[j]; i++)
         {
             // -------------------- pointers maybe here --------------------
             Particle newParticle(ofRandom(MAP_WIDTH), ofRandom(MAP_HEIGHT), j);
@@ -290,8 +294,13 @@ void ofApp::restart(){
     all_positions.clear();
     all_colors.clear();
     // threads.clear();
-
-    total_particles = number_of_particles * NUM_TYPES;
+    total_particles = 0;
+    for (int i = 0; i < NUM_TYPES; i++)
+    {
+        total_particles += number_of_particles[i];
+    }
+    
+    // total_particles = number_of_particles * NUM_TYPES;
     particlesPerThread = total_particles / numThreads;
     // cerr << particlesPerThread << endl;
     // threads.reserve(numThreads);
@@ -325,8 +334,10 @@ void ofApp::shuffle(){
     slider_rangeGY = ofRandom(0,FORCE_RANGE);
     slider_rangeYR = ofRandom(0,FORCE_RANGE);
     slider_rangeYG = ofRandom(0,FORCE_RANGE);
-    slider_rangeYY = ofRandom(0,FORCE_RANGE);   
-
+    slider_rangeYY = ofRandom(0,FORCE_RANGE);
+    field_number_R = ofRandom(1,MAX_PARTICLES);    
+    field_number_G = ofRandom(1,MAX_PARTICLES);
+    field_number_Y = ofRandom(1,MAX_PARTICLES);    
     feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
 }
 
