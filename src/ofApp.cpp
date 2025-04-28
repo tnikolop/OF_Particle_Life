@@ -40,24 +40,15 @@ void ofApp::setup(){
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
 
-    gui.add(field_get_name.setup("Preset name",""));
-    gui.add(feedback.setup("",""));
-    gui.add(button_save_settings.setup("Save Simulation Settings"));
-    button_save_settings.addListener(this,&ofApp::save_settings);
-    gui.add(dropdown.setup("Load Saved Simulation Settings"));
-    dropdown.addListener(this,&ofApp::load_settings);
-    if (!dropdown.populateFromDirectory(ofToDataPath(""), {"xml"}))
-        ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));
-
-    gui.add(&SimSettings);
     SimSettings.setup("Simulation Settings");
+    gui.add(&SimSettings);
     SimSettings.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));
     SimSettings.add(field_n_particles.setup("PARTICLES PER COLOR",number_of_particles,1,3000));
     SimSettings.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
     SimSettings.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
-    SimSettings.add(&RedSettings);
     RedSettings.setup("RED SETTINGS");
+    SimSettings.add(&RedSettings);
     // RedSettings.setHeaderBackgroundColor(ofColor::darkRed);
     // RedSettings.setBorderColor(ofColor::red);
     RedSettings.add(sliderRR.setup("RED X RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
@@ -70,8 +61,8 @@ void ofApp::setup(){
     RedSettings.add(slider_rangeRG.setup("Radius of RED X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
     RedSettings.add(slider_rangeRY.setup("Radius of RED X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
 
-    SimSettings.add(&GreenSettings);
     GreenSettings.setup("GREEN SETTINGS");
+    SimSettings.add(&GreenSettings);
     // GreenSettings.setHeaderBackgroundColor(ofColor::darkGreen);
     // GreenSettings.setBorderColor(ofColor::green);
     GreenSettings.add(sliderGR.setup("GREEN X RED",force_matrix[GREEN][RED],-MAX_FORCE,MAX_FORCE));
@@ -84,8 +75,8 @@ void ofApp::setup(){
     GreenSettings.add(slider_rangeGG.setup("Radius of GREEN X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
     GreenSettings.add(slider_rangeGY.setup("Radius of GREEN X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
 
-    SimSettings.add(&YellowSettings);
     YellowSettings.setup("YELLOW SETTINGS");
+    SimSettings.add(&YellowSettings);
     // YellowSettings.setHeaderBackgroundColor(ofColor::darkGoldenRod);
     // YellowSettings.setBorderColor(ofColor::yellow);
     YellowSettings.add(sliderYR.setup("YELLOW X RED",force_matrix[YELLOW][RED],-MAX_FORCE,MAX_FORCE));
@@ -97,6 +88,16 @@ void ofApp::setup(){
     YellowSettings.add(slider_rangeYR.setup("Radius of YELLOW X RED",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
     YellowSettings.add(slider_rangeYG.setup("Radius of YELLOW X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
     YellowSettings.add(slider_rangeYY.setup("Radius of YELLOW X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
+
+    feedback.setup("Warning","");
+    gui.add(&feedback);
+    gui.add(field_get_name.setup("Preset name",""));
+    gui.add(button_save_settings.setup("Save Simulation Settings"));
+    button_save_settings.addListener(this,&ofApp::save_settings);
+    gui.add(dropdown.setup("Load Saved Simulation Settings"));
+    dropdown.addListener(this,&ofApp::load_settings);
+    if (!dropdown.populateFromDirectory(ofToDataPath(""), {"xml"}))
+        ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));
     }
 
 //--------------------------------------------------------------
@@ -351,7 +352,11 @@ void ofApp::save_settings(){
     GreenSettings.saveToFile(ofToDataPath(filePath));
     YellowSettings.saveToFile(ofToDataPath(filePath));
     SimSettings.saveToFile(ofToDataPath(filePath));
-    
+
+    // repopulate dropdown list with the new entry
+    dropdown.clear();
+    if (!dropdown.populateFromDirectory(ofToDataPath(""), {"xml"}))
+        ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));    
 }
 
 // Load saved settings from a list
