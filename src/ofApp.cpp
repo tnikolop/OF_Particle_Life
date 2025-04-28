@@ -83,15 +83,16 @@ void ofApp::setup(){
     YellowSettings.add(slider_rangeYG.setup("Radius of YELLOW X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
     YellowSettings.add(slider_rangeYY.setup("Radius of YELLOW X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
 
-    feedback.setup("Warning","");
-    gui.add(&feedback);
-    gui.add(field_get_name.setup("Preset name",""));
-    gui.add(button_save_settings.setup("Save Simulation Settings"));
+    gui.add(button_save_settings.setup("Save Simulation"));
     button_save_settings.addListener(this,&ofApp::save_settings);
-    gui.add(dropdown.setup("Load Saved Simulation Settings"));
+    gui.add(dropdown.setup("Load Simulation"));
     dropdown.addListener(this,&ofApp::load_settings);
     if (!dropdown.populateFromDirectory(ofToDataPath("Settings"), {"xml"}))
-        ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));
+    ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));
+    gui.add(field_get_name.setup("Simulation Name:",""));
+    feedback.setup("","");
+    gui.add(&feedback);
+    // feedback.setDefaultTextColor(ofColor::red);
     }
 
 //--------------------------------------------------------------
@@ -299,6 +300,8 @@ void ofApp::restart(){
     all_colors.reserve(total_particles);
     all_positions.reserve(total_particles);
     Create_particles();
+    feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
+
 }
 
 // populates the force and force_range matrixes with random values and updates the gui sliders
@@ -323,6 +326,8 @@ void ofApp::shuffle(){
     slider_rangeYR = ofRandom(0,FORCE_RANGE);
     slider_rangeYG = ofRandom(0,FORCE_RANGE);
     slider_rangeYY = ofRandom(0,FORCE_RANGE);   
+
+    feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
 }
 
 // Save all current Simulation parameters
@@ -331,7 +336,9 @@ void ofApp::save_settings(){
 
     // Check if the name is valid
     if (name.empty()) {
-        ofLogError() << "Preset name is empty!";
+        ofLogWarning() << "Simulation name is empty. Can not save current simulation!";
+        feedback = "Name field cannot be empty!";
+        feedback.setDefaultTextColor(ofColor::red);
         return;
     }
 
@@ -339,13 +346,14 @@ void ofApp::save_settings(){
     string filePath = "Settings/"+name + ".xml";
     ofFile file(filePath);
     if (file.exists()) {
-        ofLogWarning() << "A file with that name ["+name+"] already exists. Settings not saved!";
+        ofLogWarning() << "A file with that name ["+name+"] already exists. Simulation not saved!";
+        feedback = "Name already exists!";
+        feedback.setDefaultTextColor(ofColor::red);
         return;
     }
-    // RedSettings.saveToFile(ofToDataPath(filePath));
-    // GreenSettings.saveToFile(ofToDataPath(filePath));
-    // YellowSettings.saveToFile(ofToDataPath(filePath));
     SimSettings.saveToFile(ofToDataPath(filePath));
+    feedback = "Saved Succesfullty!";  
+    feedback.setDefaultTextColor(ofColor::green);
 
     // // repopulate dropdown list with the new entry
     // //dropdown.clear() is broken and causes bugs
@@ -362,11 +370,10 @@ void ofApp::load_settings(ofFile &file){
     string file_name = file.getFileName();
     // Load settings
     string file_path = "Settings/"+file_name;
-    // RedSettings.loadFromFile(file_path);
-    // GreenSettings.loadFromFile(file_path);
-    // YellowSettings.loadFromFile(file_path);
     SimSettings.loadFromFile(file_path);
     dropdown.deselect();
+    feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
+
 }
 
 // Creates a directory for storing all the saved simulation settings
