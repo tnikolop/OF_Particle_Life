@@ -14,6 +14,7 @@ int color_force_range_matrix_squared[NUM_TYPES][NUM_TYPES]{{0}};      // the for
                                                                         // dont calculate the square distance thouasands of times needlesly
 short numThreads;
 int particlesPerThread;
+const string settings_folder_path = "Settings";         //relative to bin/data
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
@@ -24,11 +25,10 @@ void ofApp::setup(){
     numThreads = std::thread::hardware_concurrency(); // Get the number of available hardware threads
     if (numThreads == 0) {
         numThreads = 1; // Fallback to 1 if hardware_concurrency() is not well-defined
-        cerr << "Only 1 thread is being utilized" << endl;
+        ofLogError() << "Only 1 thread is being utilized"; 
     }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     restart();      // create particles and initialize vectors
-
     create_settings_dir();
     
     //========================= CREATE GUI =========================================
@@ -87,12 +87,12 @@ void ofApp::setup(){
     button_save_settings.addListener(this,&ofApp::save_settings);
     gui.add(dropdown.setup("Load Simulation"));
     dropdown.addListener(this,&ofApp::load_settings);
-    if (!dropdown.populateFromDirectory(ofToDataPath("Settings"), {"xml"}))
-    ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));
+    if (!dropdown.populateFromDirectory(settings_folder_path, {"xml"}))
+    ofLogError() << "Could not populate dropdown from path: "+ofToDataPath(settings_folder_path);
+
     gui.add(field_get_name.setup("Simulation Name:",""));
     feedback.setup("","");
     gui.add(&feedback);
-    // feedback.setDefaultTextColor(ofColor::red);
     }
 
 //--------------------------------------------------------------
@@ -351,7 +351,7 @@ void ofApp::save_settings(){
         feedback.setDefaultTextColor(ofColor::red);
         return;
     }
-    SimSettings.saveToFile(ofToDataPath(filePath));
+    SimSettings.saveToFile(filePath);
     feedback = "Saved Succesfullty!";  
     feedback.setDefaultTextColor(ofColor::green);
 
@@ -377,14 +377,13 @@ void ofApp::load_settings(ofFile &file){
 }
 
 // Creates a directory for storing all the saved simulation settings
-void ofApp::create_settings_dir() {
-    const string path = ofToDataPath("Settings", true);
-
-    if (!ofDirectory(path).exists()) {
-        bool created = ofDirectory::createDirectory(path, true, true);
+void ofApp::create_settings_dir()
+{
+    if (!ofDirectory(settings_folder_path).exists()) {
+        bool created = ofDirectory::createDirectory(settings_folder_path, true, true);
         if (created == false)
         {
-            ofLogError("Setup") << "Failed to create settings directory at: " << path;
+            ofLogError("Setup") << "Failed to create settings directory at: " << settings_folder_path;
         }
     }
 }
