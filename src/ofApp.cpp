@@ -29,7 +29,7 @@ void ofApp::setup(){
     initialize_forces(-MAX_FORCE,MAX_FORCE);
     restart();      // create particles and initialize vectors
 
-    // create_settings_dir();
+    create_settings_dir();
     
     //========================= CREATE GUI =========================================
     gui.setup("Settings");
@@ -49,8 +49,6 @@ void ofApp::setup(){
 
     RedSettings.setup("RED SETTINGS");
     SimSettings.add(&RedSettings);
-    // RedSettings.setHeaderBackgroundColor(ofColor::darkRed);
-    // RedSettings.setBorderColor(ofColor::red);
     RedSettings.add(sliderRR.setup("RED X RED",force_matrix[RED][RED],-MAX_FORCE,MAX_FORCE));
     RedSettings.add(sliderRG.setup("RED X GREEN",force_matrix[RED][GREEN],-MAX_FORCE,MAX_FORCE));
     RedSettings.add(sliderRY.setup("RED X YELLOW",force_matrix[RED][YELLOW],-MAX_FORCE,MAX_FORCE));
@@ -63,8 +61,6 @@ void ofApp::setup(){
 
     GreenSettings.setup("GREEN SETTINGS");
     SimSettings.add(&GreenSettings);
-    // GreenSettings.setHeaderBackgroundColor(ofColor::darkGreen);
-    // GreenSettings.setBorderColor(ofColor::green);
     GreenSettings.add(sliderGR.setup("GREEN X RED",force_matrix[GREEN][RED],-MAX_FORCE,MAX_FORCE));
     GreenSettings.add(sliderGG.setup("GREEN X GREEN",force_matrix[GREEN][GREEN],-MAX_FORCE,MAX_FORCE));
     GreenSettings.add(sliderGY.setup("GREEN X YELLOW",force_matrix[GREEN][YELLOW],-MAX_FORCE,MAX_FORCE));
@@ -77,8 +73,6 @@ void ofApp::setup(){
 
     YellowSettings.setup("YELLOW SETTINGS");
     SimSettings.add(&YellowSettings);
-    // YellowSettings.setHeaderBackgroundColor(ofColor::darkGoldenRod);
-    // YellowSettings.setBorderColor(ofColor::yellow);
     YellowSettings.add(sliderYR.setup("YELLOW X RED",force_matrix[YELLOW][RED],-MAX_FORCE,MAX_FORCE));
     YellowSettings.add(sliderYG.setup("YELLOW X GREEN",force_matrix[YELLOW][GREEN],-MAX_FORCE,MAX_FORCE));
     YellowSettings.add(sliderYY.setup("YELLOW X YELLOW",force_matrix[YELLOW][YELLOW],-MAX_FORCE,MAX_FORCE));
@@ -96,7 +90,7 @@ void ofApp::setup(){
     button_save_settings.addListener(this,&ofApp::save_settings);
     gui.add(dropdown.setup("Load Saved Simulation Settings"));
     dropdown.addListener(this,&ofApp::load_settings);
-    if (!dropdown.populateFromDirectory(ofToDataPath(""), {"xml"}))
+    if (!dropdown.populateFromDirectory(ofToDataPath("Settings"), {"xml"}))
         ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));
     }
 
@@ -342,31 +336,36 @@ void ofApp::save_settings(){
     }
 
     // Check if the file already exists
-    string filePath = name + ".xml";
+    string filePath = "Settings/"+name + ".xml";
     ofFile file(filePath);
     if (file.exists()) {
-        ofLogWarning() << "A file with that name ["+filePath+"] already exists. Settings not saved!";
+        ofLogWarning() << "A file with that name ["+name+"] already exists. Settings not saved!";
         return;
     }
-    RedSettings.saveToFile(ofToDataPath(filePath));
-    GreenSettings.saveToFile(ofToDataPath(filePath));
-    YellowSettings.saveToFile(ofToDataPath(filePath));
+    // RedSettings.saveToFile(ofToDataPath(filePath));
+    // GreenSettings.saveToFile(ofToDataPath(filePath));
+    // YellowSettings.saveToFile(ofToDataPath(filePath));
     SimSettings.saveToFile(ofToDataPath(filePath));
 
-    // repopulate dropdown list with the new entry
-    dropdown.clear();
-    if (!dropdown.populateFromDirectory(ofToDataPath(""), {"xml"}))
-        ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));    
+    // // repopulate dropdown list with the new entry
+    // //dropdown.clear() is broken and causes bugs
+    // dropdown.clear();
+    // dropdown.setup("Load Saved Simulation Settings");
+    // if (!dropdown.populateFromDirectory(ofToDataPath("Settings"), {"xml"}))
+    //     ofLogError("Could not populate dropdown from path: "+ofToDataPath(""));
+    //
+    // thats why I removed this code. There is no refreshing. Just restart the program for loading new settings 
 }
 
 // Load saved settings from a list
 void ofApp::load_settings(ofFile &file){
     string file_name = file.getFileName();
     // Load settings
-    RedSettings.loadFromFile(ofToDataPath(file_name));
-    GreenSettings.loadFromFile(ofToDataPath(file_name));
-    YellowSettings.loadFromFile(ofToDataPath(file_name));
-    SimSettings.loadFromFile(ofToDataPath(file_name));
+    string file_path = "Settings/"+file_name;
+    // RedSettings.loadFromFile(file_path);
+    // GreenSettings.loadFromFile(file_path);
+    // YellowSettings.loadFromFile(file_path);
+    SimSettings.loadFromFile(file_path);
     dropdown.deselect();
 }
 
