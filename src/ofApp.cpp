@@ -371,6 +371,7 @@ void ofApp::load_settings(ofFile &file){
     // Load settings
     string file_path = "Settings/"+file_name;
     SimSettings.loadFromFile(file_path);
+    restart();  // to kaei thn prwth fora
     dropdown.deselect();
     feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
 
