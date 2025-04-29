@@ -99,7 +99,7 @@ class ofApp : public ofBaseApp{
 					slider_viscosity, slider_wall_repel_force;
 	ofxIntSlider slider_rangeRR, slider_rangeRG, slider_rangeRY,
 				 slider_rangeGR, slider_rangeGG, slider_rangeGY, slider_rangeYR, slider_rangeYG, slider_rangeYY;
-	ofxIntField field_n_particles, field_number_G, field_number_Y,field_number_R;
+	ofxIntField field_number_G, field_number_Y,field_number_R;
 	ofVbo vbo;								// more efficient batch drawing
 
 	ofxDirDropdown dropdown;

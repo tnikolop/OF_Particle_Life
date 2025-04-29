@@ -26,7 +26,6 @@ void ofApp::setup(){
         ofLogError() << "Only 1 thread is being utilized"; 
     }
     initialize_forces(-MAX_FORCE,MAX_FORCE);
-    restart();      // create particles and initialize vectors
     create_settings_dir();
     
     //========================= CREATE GUI =========================================
@@ -42,7 +41,6 @@ void ofApp::setup(){
     gui.add(&SimSettings);
     SimSettings.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));
     SimSettings.add(toggle_shuffle_numbers.setup("Shuffle Number of Particles",false));
-    SimSettings.add(field_n_particles.setup("PARTICLES PER COLOR",1000,1,MAX_PARTICLES));
     SimSettings.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
     SimSettings.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
@@ -95,6 +93,8 @@ void ofApp::setup(){
     gui.add(field_get_name.setup("Simulation Name:",""));
     feedback.setup("","");
     gui.add(&feedback);
+
+    restart();      // create particles and initialize vectors
     }
 
 //--------------------------------------------------------------
@@ -295,6 +295,9 @@ void ofApp::restart(){
     all_positions.clear();
     all_colors.clear();
     // threads.clear();
+    number_of_particles[RED] = field_number_R;
+    number_of_particles[GREEN] = field_number_G;
+    number_of_particles[YELLOW] = field_number_Y;
     total_particles = 0;
     for (int i = 0; i < NUM_TYPES; i++)
     {
@@ -342,6 +345,7 @@ void ofApp::shuffle(){
         field_number_R = ofRandom(1,MAX_PARTICLES);
         field_number_G = ofRandom(1,MAX_PARTICLES);
         field_number_Y = ofRandom(1,MAX_PARTICLES);
+        restart();
     }
 }
 
@@ -381,6 +385,7 @@ void ofApp::save_settings(){
 }
 
 // Load saved settings from a list
+// ekteleite 2 fores gia kapoion logo me kathe klik sto dropdown. Einai buggy af to ofxdropdown
 void ofApp::load_settings(ofFile &file){
     string file_name = file.getFileName();
     // Load settings
@@ -388,8 +393,7 @@ void ofApp::load_settings(ofFile &file){
     SimSettings.loadFromFile(file_path);
     dropdown.deselect();
     feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
-    restart();  // to kaei thn prwth fora
-
+    restart();
 }
 
 // Creates a directory for storing all the saved simulation settings
