@@ -36,11 +36,10 @@ void ofApp::setup(){
     button_restart.addListener(this,&ofApp::restart);
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
+    gui.add(toggle_shuffle_numbers.setup("Shuffle Number of Particles",false));
 
     SimSettings.setup("Simulation Settings");
     gui.add(&SimSettings);
-    SimSettings.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));
-    SimSettings.add(toggle_shuffle_numbers.setup("Shuffle Number of Particles",false));
     SimSettings.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
     SimSettings.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
 
@@ -163,7 +162,7 @@ void ofApp::update(){
     }
     // cerr << "FLAG 2" << endl;
     for (size_t i = 0; i < all_particles.size(); i++) {
-        all_particles[i].update(toggle_reverse_velocity);
+        all_particles[i].update(false); // ebgala to toggle kai to afhsa false gt oytw h alliws den allazei kati
         all_positions[i] = all_particles[i].position;  // Update positions in all_positions
     }
     // cerr << "FLAG 3" << endl;
