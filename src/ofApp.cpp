@@ -41,6 +41,7 @@ void ofApp::setup(){
     SimSettings.setup("Simulation Settings");
     gui.add(&SimSettings);
     SimSettings.add(toggle_reverse_velocity.setup("REVERSE VELOCITY ON MAP EDGE",false));
+    SimSettings.add(toggle_shuffle_numbers.setup("Shuffle Number of Particles",false));
     SimSettings.add(field_n_particles.setup("PARTICLES PER COLOR",1000,1,MAX_PARTICLES));
     SimSettings.add(slider_viscosity.setup("VISCOSITY",0.001F,0.0F,0.1F));  //Max Viscosity 0.1
     SimSettings.add(slider_wall_repel_force.setup("WALL REPEL FORCE",0.1F,0,WALL_REPEL_FORCE_MAX));
@@ -334,11 +335,14 @@ void ofApp::shuffle(){
     slider_rangeGY = ofRandom(0,FORCE_RANGE);
     slider_rangeYR = ofRandom(0,FORCE_RANGE);
     slider_rangeYG = ofRandom(0,FORCE_RANGE);
-    slider_rangeYY = ofRandom(0,FORCE_RANGE);
-    field_number_R = ofRandom(1,MAX_PARTICLES);    
-    field_number_G = ofRandom(1,MAX_PARTICLES);
-    field_number_Y = ofRandom(1,MAX_PARTICLES);    
+    slider_rangeYY = ofRandom(0,FORCE_RANGE);  
     feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
+
+    if (toggle_shuffle_numbers) {
+        field_number_R = ofRandom(1,MAX_PARTICLES);
+        field_number_G = ofRandom(1,MAX_PARTICLES);
+        field_number_Y = ofRandom(1,MAX_PARTICLES);
+    }
 }
 
 // Save all current Simulation parameters
@@ -382,9 +386,9 @@ void ofApp::load_settings(ofFile &file){
     // Load settings
     string file_path = "Settings/"+file_name;
     SimSettings.loadFromFile(file_path);
-    restart();  // to kaei thn prwth fora
     dropdown.deselect();
     feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
+    restart();  // to kaei thn prwth fora
 
 }
 
