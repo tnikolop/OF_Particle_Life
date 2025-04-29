@@ -5,14 +5,12 @@ This is the new version of Particle Life using Open Frameworks
 
 ### TO DO:
 - Better Thread Management
-- Better GUI
   
 ### BUG FIXES
 - if all 3 of the same color radius is 0 then fps drops dramatically. Alla ama kaneis restart gia kapoion logo ftiaxnei
 - ta threads krasaroun se xamhlo arithmo se tyxaies stigmes
 
 ### TO ADD:
-- Change individual number of particles per color
 - 3D version
 
 ### INSATLLATION:

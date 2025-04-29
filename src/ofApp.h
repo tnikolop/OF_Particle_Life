@@ -5,7 +5,7 @@
 #include "ofxDropdown.h"
 
 constexpr short MAP_BORDER = 10;     // This is used so the particles can not be on the edge of the screen for better visibility 
-constexpr float MAX_FORCE = 25;
+constexpr float MAX_FORCE = 100;
 constexpr float WALL_REPEL_FORCE_MAX = 10;
 constexpr short WALL_REPEL_BOUND = MAP_BORDER+4;  // the wall starts repelling particles if they're closer than WALL_REPEL_BOUND pixels
 constexpr short MAX_PARTICLES = 3000;
