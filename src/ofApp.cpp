@@ -3,7 +3,6 @@
 // Constant Variables
 short MAP_WIDTH;                
 short MAP_HEIGHT;
-short FORCE_RANGE = 200;
 short number_of_particles[NUM_TYPES] = {1000,1000,1000};                       // per type (color)
 float viscosity;
 short total_particles = -1;
@@ -37,6 +36,7 @@ void ofApp::setup(){
     gui.add(button_shuffle.setup("SHUFFLE (S)"));
     button_shuffle.addListener(this,&ofApp::shuffle);
     gui.add(toggle_shuffle_numbers.setup("Shuffle Number of Particles",false));
+    gui.add(toggle_shuffle_radi.setup("Shuffle Radius",false));
 
     SimSettings.setup("Simulation Settings");
     gui.add(&SimSettings);
@@ -52,9 +52,9 @@ void ofApp::setup(){
     sliderRR.setFillColor(ofColor::darkRed);
     sliderRG.setFillColor(ofColor::darkRed);
     sliderRY.setFillColor(ofColor::darkRed);
-    RedSettings.add(slider_rangeRR.setup("Radius of RED X RED",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
-    RedSettings.add(slider_rangeRG.setup("Radius of RED X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
-    RedSettings.add(slider_rangeRY.setup("Radius of RED X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
+    RedSettings.add(slider_rangeRR.setup("Radius of RED X RED",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
+    RedSettings.add(slider_rangeRG.setup("Radius of RED X GREEN",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
+    RedSettings.add(slider_rangeRY.setup("Radius of RED X YELLOW",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
 
     GreenSettings.setup("GREEN SETTINGS");
     SimSettings.add(&GreenSettings);
@@ -65,9 +65,9 @@ void ofApp::setup(){
     sliderGR.setFillColor(ofColor::darkGreen);
     sliderGG.setFillColor(ofColor::darkGreen);
     sliderGY.setFillColor(ofColor::darkGreen);
-    GreenSettings.add(slider_rangeGR.setup("Radius of GREEN X RED",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
-    GreenSettings.add(slider_rangeGG.setup("Radius of GREEN X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
-    GreenSettings.add(slider_rangeGY.setup("Radius of GREEN X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
+    GreenSettings.add(slider_rangeGR.setup("Radius of GREEN X RED",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
+    GreenSettings.add(slider_rangeGG.setup("Radius of GREEN X GREEN",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
+    GreenSettings.add(slider_rangeGY.setup("Radius of GREEN X YELLOW",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
 
     YellowSettings.setup("YELLOW SETTINGS");
     SimSettings.add(&YellowSettings);
@@ -78,9 +78,9 @@ void ofApp::setup(){
     sliderYR.setFillColor(ofColor::darkGoldenRod);
     sliderYG.setFillColor(ofColor::darkGoldenRod);
     sliderYY.setFillColor(ofColor::darkGoldenRod);
-    YellowSettings.add(slider_rangeYR.setup("Radius of YELLOW X RED",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
-    YellowSettings.add(slider_rangeYG.setup("Radius of YELLOW X GREEN",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
-    YellowSettings.add(slider_rangeYY.setup("Radius of YELLOW X YELLOW",ofRandom(0,FORCE_RANGE),0,FORCE_RANGE));
+    YellowSettings.add(slider_rangeYR.setup("Radius of YELLOW X RED",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
+    YellowSettings.add(slider_rangeYG.setup("Radius of YELLOW X GREEN",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
+    YellowSettings.add(slider_rangeYY.setup("Radius of YELLOW X YELLOW",MAX_FORCE_RANGE,0,MAX_FORCE_RANGE));
 
     gui.add(button_save_settings.setup("Save Simulation"));
     button_save_settings.addListener(this,&ofApp::save_settings);
@@ -319,7 +319,6 @@ void ofApp::restart(){
 // populates the force and force_range matrixes with random values and updates the gui sliders
 void ofApp::shuffle(){
     initialize_forces(-MAX_FORCE,MAX_FORCE);
-    // initialize_color_force_range(0,FORCE_RANGE);
     sliderRR = force_matrix[RED][RED];
     sliderRG = force_matrix[RED][GREEN];
     sliderRY = force_matrix[RED][YELLOW];
@@ -329,23 +328,27 @@ void ofApp::shuffle(){
     sliderYR = force_matrix[YELLOW][RED];
     sliderYG = force_matrix[YELLOW][GREEN];
     sliderYY = force_matrix[YELLOW][YELLOW];
-    slider_rangeRR = ofRandom(0,FORCE_RANGE);
-    slider_rangeRG = ofRandom(0,FORCE_RANGE);
-    slider_rangeRY = ofRandom(0,FORCE_RANGE);
-    slider_rangeGR = ofRandom(0,FORCE_RANGE);
-    slider_rangeGG = ofRandom(0,FORCE_RANGE);
-    slider_rangeGY = ofRandom(0,FORCE_RANGE);
-    slider_rangeYR = ofRandom(0,FORCE_RANGE);
-    slider_rangeYG = ofRandom(0,FORCE_RANGE);
-    slider_rangeYY = ofRandom(0,FORCE_RANGE);  
-    feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
 
+    if (toggle_shuffle_radi)
+    {
+        slider_rangeRR = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeRG = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeRY = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeGR = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeGG = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeGY = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeYR = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeYG = ofRandom(0,MAX_FORCE_RANGE);
+        slider_rangeYY = ofRandom(0,MAX_FORCE_RANGE);  
+    }
+    
     if (toggle_shuffle_numbers) {
         field_number_R = ofRandom(1,MAX_PARTICLES);
         field_number_G = ofRandom(1,MAX_PARTICLES);
         field_number_Y = ofRandom(1,MAX_PARTICLES);
-        restart();
+        restart();  // restart so we create the new amount of particles
     }
+    feedback = ""; // clean feedback text. kserw oti yparxei kalyterow tropos alla aytos einai o pio aplos
 }
 
 // Save all current Simulation parameters
