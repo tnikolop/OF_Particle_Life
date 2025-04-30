@@ -1,17 +1,16 @@
 #include "ofApp.h"
 
-// Constant Variables
 short MAP_WIDTH;                
 short MAP_HEIGHT;
-short number_of_particles[NUM_TYPES] = {1000,1000,1000};                       // per type (color)
 float viscosity;
+short numThreads;
+int particlesPerThread;
 short total_particles = -1;
+short number_of_particles[NUM_TYPES] = {1000,1000,1000};                       // per type (color)
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};               // the forces of attraction of each individual color against every other color
 int color_force_range_matrix_squared[NUM_TYPES][NUM_TYPES]{{0}};      // the force range of each individual color againts every other color
                                                                         // squared so we save computational time on compute force and 
                                                                         // dont calculate the square distance thouasands of times needlesly
-short numThreads;
-int particlesPerThread;
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetBackgroundColor(0,0,0);    // Black Background Color
