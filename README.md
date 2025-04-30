@@ -7,6 +7,9 @@
 - Keyboard shortcuts for fast control
 - Visual feedback and smooth particle dynamics
 
+### Note
+After saving a preset you need to restart the app in order to see it. This is because the dropdown addon is really buggy and there is nothing I can do about it.
+
 ## SETUP
 ### Linux
 - [Download OpenFrameworks](https://openframeworks.cc/download/)
