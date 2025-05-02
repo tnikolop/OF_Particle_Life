@@ -6,7 +6,7 @@ float viscosity;
 short numThreads;
 int particlesPerThread;
 short total_particles = -1;
-short number_of_particles[NUM_TYPES] = {1000,1000,1000};                       // per type (color)
+short number_of_particles[NUM_TYPES] = {1500,1500,1500};                       // per type (color)
 float force_matrix[NUM_TYPES][NUM_TYPES]{{0}};               // the forces of attraction of each individual color against every other color
 int color_force_range_matrix_squared[NUM_TYPES][NUM_TYPES]{{0}};      // the force range of each individual color againts every other color
                                                                         // squared so we save computational time on compute force and 
@@ -97,13 +97,11 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    // number_of_particles = field_n_particles;
     number_of_particles[RED] = field_number_R;
     number_of_particles[GREEN] = field_number_G;
     number_of_particles[YELLOW] = field_number_Y;
     viscosity = slider_viscosity;
 
-    // this needs to be automatic for dynamic number of types
     force_matrix[RED][RED] = sliderRR;
     force_matrix[RED][GREEN] = sliderRG;
     force_matrix[RED][YELLOW] = sliderRY;
@@ -144,7 +142,6 @@ void ofApp::update(){
         {
             std::cerr << e.what() << '\n';
         }
-        // cerr << "FLAG 1" << endl;
     }
     else    // No threads
     {
@@ -159,12 +156,10 @@ void ofApp::update(){
             all_particles[i].apply_WallRepel(slider_wall_repel_force);
         }
     }
-    // cerr << "FLAG 2" << endl;
     for (size_t i = 0; i < all_particles.size(); i++) {
         all_particles[i].update(false); // ebgala to toggle kai to afhsa false gt oytw h alliws den allazei kati
         all_positions[i] = all_particles[i].position;  // Update positions in all_positions
     }
-    // cerr << "FLAG 3" << endl;
     // Update the VBO with the new positions
     vbo.updateVertexData(all_positions.data(), all_positions.size());
         // cerr << "FLAG 4" << endl;

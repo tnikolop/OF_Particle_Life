@@ -44,6 +44,13 @@ public:
 
 	~ParticleThread() {
     	// ofLog() << "ParticleThread destructor called" << "!" <<this->getThreadId()<<"@";
+
+		/*
+		 To problima me ta threads ginete epeidh kalyte o destructor na katastrepsei ena thread 
+		to opoio einai energo ekeimnh thn xroniki stimgh. Gia mikro airthmo somatidiwn symbainei poly syxna 
+		enw gia megalo arithmo (>3000) symbainei para poly spania.
+		Gia ayto kai exw thn deiklida asfaleias if (particles per thread > 25)
+		*/
 	}
 	
 	void threadedFunction() {
@@ -55,16 +62,22 @@ public:
 						(*particles)[i].compute_Force((*particles)[j]);
 					}
 				}
-				// cerr << this->getThreadName() +  ": FLAG 1" << endl;
+				// ofLogNotice() << this->getThreadId() << ": FLAG 1";
 				(*particles)[i].apply_WallRepel(Wall_Repel_force);
-				// cerr << this->getThreadName() +  ": FLAG 2" << endl;
+				// ofLogNotice() << this->getThreadId() << ": FLAG 2";
+
+			// while (this->isThreadRunning()) {/*wait to finish*/ }
+			// me auto ftiaxnete to bug pou krasarous ta threads randomly epeidei perimenei mexri na klithei to waitForThread()
+			// wstoso kanei to programma poly pio argo kai praktika unusable gia megalo arithmo particles
 			}
 		}
 		catch (const std::exception& e) {
-        std::cerr << "Exception in thread: " << e.what() << std::endl;
+        // std::cerr << "Exception in thread: " << e.what() << std::endl;
+		ofLogError() << "Exception in thread: " << e.what();
 		}
 		catch (...) {
-        std::cerr << "Unknown exception in thread." << std::endl;
+        // std::cerr << "Unknown exception in thread." << std::endl;
+		ofLogError() << "Unknown exception in thread.";
     	}
 		
 	}
@@ -106,5 +119,4 @@ class ofApp : public ofBaseApp{
 	ofxDirDropdown dropdown;
 	ofxInputField<string> field_get_name;	// input field to enter the name for saving the settings
 	ofxLabel feedback;						// visual feedback for saving/loading settings
-	// vector<string> presetFiles;
 };
