@@ -24,10 +24,10 @@ class Particle {
 	glm::vec2 velocity;		// 2D vector representing the velocity (vx, vy)
 	int type;				// Type of the particle (for interaction rules)
 
-	Particle(float x, float y, int color);
+	Particle(const float x, const float y, const int color);
 
-	void update(bool toggle);
-	void apply_WallRepel(float force);
+	void update(const bool toggle);
+	void apply_WallRepel(const float force);
 	void compute_Force(const Particle& acting_particle);
 	ofFloatColor getColor() const;
 };
@@ -96,8 +96,8 @@ class ofApp : public ofBaseApp{
 		vector<ofFloatColor> all_colors;  	// also for vbo
 		
 		void Create_particles();
-		void initialize_forces(float min, float max);
-		void initialize_color_force_range(short min, short max);
+		void initialize_forces(const float min, const float max);
+		void initialize_color_force_range(const short min, const short max);
 		void restart();
 		void shuffle();
 		void save_settings();
