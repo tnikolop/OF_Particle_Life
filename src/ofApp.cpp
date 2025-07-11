@@ -27,6 +27,7 @@ void ofApp::setup(){
     create_settings_dir();
     
     //========================= CREATE GUI =========================================
+#pragma region
     gui.setup("Settings");
     gui.setPosition(MAP_WIDTH+70,20);
     gui.setWidthElements(260);
@@ -91,6 +92,7 @@ void ofApp::setup(){
     gui.add(field_get_name.setup("Simulation Name:",""));
     feedback.setup("","");
     gui.add(&feedback);
+#pragma endregion
 
     restart();      // create particles and initialize vectors
     }
