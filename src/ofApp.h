@@ -27,7 +27,6 @@ class Particle {
 	Particle(float x, float y, int color);
 
 	void update(bool toggle);
-	void draw();
 	void apply_WallRepel(float force);
 	void compute_Force(const Particle& acting_particle);
 	ofFloatColor getColor() const;
