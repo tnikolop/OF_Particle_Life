@@ -36,6 +36,9 @@ sudo apt-get install libxi-dev libxcursor-dev libxinerama-dev
 #### TO DO:
 - Better Thread Management
 - 3D version
+- per unit forces?? gt twra oi dynameis kanoyn scale me to screen size afou kai to map kanei scale me to screen size;
+    megali othoni, megales apostaseis kai ara mikroteres dynameis gia fainomenika "ises" apostaseis.
+    Na to dokimasw me saved settings se laptop kai pc na dw ama exei ousiastiki diafora.
   
 #### BUG FIXES
 - if all 3 of the same color radius is 0 then fps drops dramatically. Alla ama kaneis restart gia kapoion logo ftiaxnei
